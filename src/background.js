@@ -1,3 +1,3 @@
-
-alert('Hello world!')
-
+chrome.runtime.onConnect.addListener(port => {
+    port.postMessage({ greeting:'hello' });
+});

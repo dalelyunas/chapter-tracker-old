@@ -1,23 +1,8 @@
-const getDomain = url => {
-    var hostName = getHostName(url);
-    var domain = hostName;
-    
-    if (hostName != null) {
-        var parts = hostName.split('.').reverse();
-        
-        if (parts != null && parts.length > 1) {
-            domain = parts[1] + '.' + parts[0];
-                
-            if (hostName.toLowerCase().indexOf('.co.uk') != -1 && parts.length > 2) {
-              domain = parts[2] + '.' + domain;
-            }
-        }
-    }
-    
-    return domain;
-}
+export const getOrDefault = (obj, objKey, defaultVal) => {
+    return obj[objKey] || defaultVal;
+};
 
-const insertIntoSortedNumberArray = (arr, val) => {
+export const insertIntoSortedNumberArray = (arr, val) => {
     const resultArr = new Array(arr.length + 1);
     let arrIndex = 0;
     for (let i = 0; i < arr.length + 1; i++) {
@@ -33,8 +18,3 @@ const insertIntoSortedNumberArray = (arr, val) => {
 
     return resultArr;
 }
-
-export { 
-    getDomain,
-    insertIntoSortedNumberArray
-};
