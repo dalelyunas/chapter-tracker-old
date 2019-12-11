@@ -4,8 +4,6 @@
 // match the page
 // send the result to background for saving
 
-const getHostname = () => window.location.hostname;
-
 // Performs an eval to use the matcher function
 const performMatch = matcherFunctionString => {
     if (matcherFunctionString === undefined) {
@@ -14,27 +12,24 @@ const performMatch = matcherFunctionString => {
     return eval(matcherFunction)(getHostname(), document);
 };
 
-const getMatchers = port => {
-    port.postMessage({ 
-        type: 'getMatchers',
-        hostname: getHostname()
-    });
-};
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      console.log(sender.tab ?
+                  "from a content script:" + sender.tab.url :
+                  "from the extension");
 
-const port = chrome.runtime.connect({name:'match-page'});
-port.onMessage.addListener(message => {
-    if (message.type === 'sendMatchers') {
-        console.log('received matchers');
-        const matchers = message.matchers;
-        port.postMessage({
-            type: 'matcherResult',
+      if (request.type == "apply_matchers") {
+        const matchers = request.matchers;
+        sendResponse({
+            type: 'matchers_result',
             bookTitle: performMatch(matchers.bookTitleMatcher),
             chapterNumber: performMatch(matchers.chapterNumberMatcher),
-            hostname: getHostname()
+            hostname: window.location.hostname
         });
-    } else if (message.type === 'tabUpdated') {
-        getMatchers(port);
-    }
-});
+      }
+    });
 
-getMatchers(port);
+
+
+
+
+
