@@ -3,10 +3,10 @@ const performMatch = matcherFunctionString => {
     if (matcherFunctionString === undefined) {
         return undefined;
     }
-    return eval(matcherFunction)(getHostname(), document);
+    return eval(matcherFunction)(window.location.pathname, document);
 };
 
-const listener = (request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
   if (request.type == 'apply_matchers') {
     const matchers = request.matchers;
     console.log('responding');
@@ -16,11 +16,8 @@ const listener = (request, sender, sendResponse) => {
         chapterNumber: performMatch(matchers.chapterNumberMatcher),
         hostname: window.location.hostname
     });
-    chrome.runtime.onMessage.addListener(listener);
   }
-};
-
-chrome.runtime.onMessage.addListener(listener);
+});
 
 
 

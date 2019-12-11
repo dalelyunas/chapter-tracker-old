@@ -6,20 +6,20 @@ const getHostnameUnsafe = url => {
     return parsed.hostname;
 };
 
+const isValidMatchers = matchers => matchers.bookTitleMatcher !== undefined && matchers.chapterNumberMatcher !== undefined;
+
+const isValidMatchedData = data => data.bookTitle !== undefined && data.chapterNumber !== undefined && data.hostname !== undefined;
+
 const sendMatchers = (matchers, tabId) => {
-    if (matchers.bookTitleMatcher !== undefined && matchers.chapterNumberMatcher !== undefined) {
+    if (isValidMatchers(matchers)) {
         const payload = {
             type: 'apply_matchers',
             matchers
         };
         chrome.tabs.sendMessage(tabId, payload, response => {
-            if (chrome.runtime.lastError) {
-                setTimeout(() => sendMatchers(matchers, tabId), 500);
-            } else {
-                console.log(response);
-                if (response.bookTitle !== undefined && response.chapterNumber !== undefined && response.hostname !== undefined) {
-                    upsertChapter(response.hostname, response.bookTitle, response.chapterNumber);
-                }
+            console.log(response);
+            if (isValidMatchedData(response)) {
+                upsertChapter(response.hostname, response.bookTitle, response.chapterNumber);
             }
         });
     }
@@ -27,10 +27,11 @@ const sendMatchers = (matchers, tabId) => {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
         if (tab.active && changeInfo.url) {
-            getMatchers(getHostnameUnsafe(changeInfo.url)).then(matchers => {
-                console.log('sending');
-                sendMatchers(matchers, tabId);
-            });
+            chrome.tabs.executeScript(tabId, { file: 'match/match-page.js'}, () => {
+                getMatchers(getHostnameUnsafe(changeInfo.url)).then(matchers => {
+                    sendMatchers(matchers, tabId);
+                });
+            })
         }
      }
 );
