@@ -4,22 +4,22 @@ import { getOrDefault } from '../util';
 const MATCHER_KEY_PREFIX = 'matcher';
 
 // matchers are javascript functions that 
-// given context (domain and dom) produce 
+// given context (hostname and dom) produce 
 // a book name and chapter number
 const MATCHER_SCHEMA = {
-    bookNameMatcher: null,
-    chapterNumberMatcher: null
+    bookTitleMatcher: undefined,
+    chapterNumberMatcher: undefined
 };
 
-const getMatcherKey = domain => {
-    return MATCHER_KEY_PREFIX + ':' + domain;
+const getMatcherKey = hostname => {
+    return MATCHER_KEY_PREFIX + ':' + hostname;
 };
 
-export const getMatchers = async domain => {
-    const matcherKey = getMatcherKey(domain, bookTitle);
+export const getMatchers = async hostname => {
+    const matcherKey = getMatcherKey(hostname);
     return getOrDefault(await get(matcherKey), MATCHER_SCHEMA);
 };
 
-export const replaceMatcherData = async (domain, data) => {
-    set(getMatcherKey(domain), data);
+export const replaceMatcherData = async (hostname, data) => {
+    set(getMatcherKey(hostname), data);
 };

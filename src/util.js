@@ -1,5 +1,5 @@
-export const getOrDefault = (obj, objKey, defaultVal) => {
-    return obj[objKey] || defaultVal;
+export const getOrDefault = (obj, defaultVal) => {
+    return obj || defaultVal;
 };
 
 export const insertIntoSortedNumberArray = (arr, val) => {
