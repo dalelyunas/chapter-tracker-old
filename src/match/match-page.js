@@ -7,20 +7,14 @@ const performMatch = matcherFunctionString => {
 };
 
 chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
-  if (request.type == 'apply_matchers') {
-    const matchers = request.matchers;
+  if (request.type == 'apply_matcher') {
+    const matcher = request.matcher;
     console.log('responding');
     sendResponse({
-        type: 'matchers_result',
-        bookTitle: performMatch(matchers.bookTitleMatcher),
-        chapterNumber: performMatch(matchers.chapterNumberMatcher),
+        type: 'matcher_result',
+        bookTitle: performMatch(matcher.bookTitleMatcher),
+        chapterNumber: performMatch(matcher.chapterNumberMatcher),
         hostname: window.location.hostname
     });
   }
 });
-
-
-
-
-
-

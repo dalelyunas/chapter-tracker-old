@@ -15,11 +15,11 @@ const getMatcherKey = hostname => {
     return MATCHER_KEY_PREFIX + ':' + hostname;
 };
 
-export const getMatchers = async hostname => {
+export const getMatcher = async hostname => {
     const matcherKey = getMatcherKey(hostname);
     return getOrDefault(await get(matcherKey), MATCHER_SCHEMA);
 };
 
-export const replaceMatcherData = async (hostname, data) => {
+export const upsertMatcherData = async (hostname, data) => {
     set(getMatcherKey(hostname), data);
 };
