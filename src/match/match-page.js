@@ -1,9 +1,3 @@
-// Get domain
-// Send it to background
-// matchers come back
-// match the page
-// send the result to background for saving
-
 // Performs an eval to use the matcher function
 const performMatch = matcherFunctionString => {
     if (matcherFunctionString === undefined) {
@@ -12,21 +6,21 @@ const performMatch = matcherFunctionString => {
     return eval(matcherFunction)(getHostname(), document);
 };
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      console.log(sender.tab ?
-                  "from a content script:" + sender.tab.url :
-                  "from the extension");
-
-      if (request.type == "apply_matchers") {
-        const matchers = request.matchers;
-        sendResponse({
-            type: 'matchers_result',
-            bookTitle: performMatch(matchers.bookTitleMatcher),
-            chapterNumber: performMatch(matchers.chapterNumberMatcher),
-            hostname: window.location.hostname
-        });
-      }
+const listener = (request, sender, sendResponse) => {
+  if (request.type == 'apply_matchers') {
+    const matchers = request.matchers;
+    console.log('responding');
+    sendResponse({
+        type: 'matchers_result',
+        bookTitle: performMatch(matchers.bookTitleMatcher),
+        chapterNumber: performMatch(matchers.chapterNumberMatcher),
+        hostname: window.location.hostname
     });
+    chrome.runtime.onMessage.addListener(listener);
+  }
+};
+
+chrome.runtime.onMessage.addListener(listener);
 
 
 

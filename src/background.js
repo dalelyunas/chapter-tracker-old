@@ -1,46 +1,36 @@
 import { getMatchers } from './storage/matcher';
 import { upsertChapter } from './storage/book';
 
-chrome.runtime.onConnect.addListener(port => {
-    port.onMessage.addListener(message => {
-        if (message.type === 'matcherResult') {
-           
-        } else if (message.type === 'getMatchers') {
-            getMatchers(message.hostname).then(matchers => {
-                console.log('matchers');
-                if (matchers.bookTitleMatcher !== undefined && matchers.chapterNumberMatcher !== undefined) {
-                    port.postMessage({
-                        type: 'sendMatchers',
-                        matchers
-                    });
-                }
-            })
-        }
-    });
-
-const getHostname = url => {
+const getHostnameUnsafe = url => {
     const parsed = new URL(url);
     return parsed.hostname;
-}
+};
 
-const handleResponse = resp => {
-    upsertChapter(resp.hostname, resp.bookTitle, resp.chapterNumber);
+const sendMatchers = (matchers, tabId) => {
+    if (matchers.bookTitleMatcher !== undefined && matchers.chapterNumberMatcher !== undefined) {
+        const payload = {
+            type: 'apply_matchers',
+            matchers
+        };
+        chrome.tabs.sendMessage(tabId, payload, response => {
+            if (chrome.runtime.lastError) {
+                setTimeout(() => sendMatchers(matchers, tabId), 500);
+            } else {
+                console.log(response);
+                if (response.bookTitle !== undefined && response.chapterNumber !== undefined && response.hostname !== undefined) {
+                    upsertChapter(response.hostname, response.bookTitle, response.chapterNumber);
+                }
+            }
+        });
+    }
 };
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-        console.log('detected');
         if (tab.active && changeInfo.url) {
-            getMatchers(getHostname(changeInfo.url)).then(matchers => {
-                console.log('sending: ' + tabId + ' ' + changeInfo.url )
-                if (true || (matchers.bookTitleMatcher !== undefined && matchers.chapterNumberMatcher !== undefined)) {
-                    const payload = {
-                        type: 'apply_matchers',
-                        matchers
-                    };
-                    chrome.runtime.sendMessage(tabId, payload, handleResponse);
-                }
+            getMatchers(getHostnameUnsafe(changeInfo.url)).then(matchers => {
+                console.log('sending');
+                sendMatchers(matchers, tabId);
             });
         }
-     });
-});
-
+     }
+);
