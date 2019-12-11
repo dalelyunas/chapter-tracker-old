@@ -1,4 +1,4 @@
-import { getMatcher } from './storage/matcher';
+import { getPageParsers } from './storage/page-parsers';
 import { upsertChapter } from './storage/book';
 
 const getHostnameUnsafe = url => {
@@ -6,32 +6,31 @@ const getHostnameUnsafe = url => {
     return parsed.hostname;
 };
 
-const isValidmatcher = matcher => matcher.bookTitleMatcher !== undefined && matcher.chapterNumberMatcher !== undefined;
+const isValidPageParsers = pageParsers => true; //pageParsers.bookTitleParser !== undefined && pageParsers.chapterNumberParser !== undefined;
 
-const isValidMatchedData = data => data.bookTitle !== undefined && data.chapterNumber !== undefined && data.hostname !== undefined;
+const isValidParsedData = data => data.bookTitle !== undefined && data.chapterNumber !== undefined && data.hostname !== undefined;
 
-const sendMatcher = (matcher, tabId) => {
+const sendPageParsers = (pageParsers, tabId) => {
     const payload = {
-        type: 'apply_matcher',
-        matcher
+        type: 'apply_parsers',
+        pageParsers
     };
     chrome.tabs.sendMessage(tabId, payload, response => {
         console.log(response);
-        if (isValidMatchedData(response)) {
+        if (isValidParsedData(response)) {
             upsertChapter(response.hostname, response.bookTitle, response.chapterNumber);
         }
     });
 };
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-        if (tab.active && changeInfo.url) {
-            getMatcher(getHostnameUnsafe(changeInfo.url)).then(matcher => {
-                if (isValidmatcher(matcher)) {
-                    chrome.tabs.executeScript(tabId, { file: 'match/match-page.js'}, () => {
-                        sendMatcher(matcher, tabId);
-                    });
-                }
-            })
-        }
-     }
-);
+    if (tab.active && changeInfo.url) {
+        getPageParsers(getHostnameUnsafe(changeInfo.url)).then(pageParsers => {
+            if (isValidPageParsers(pageParsers)) {
+                chrome.tabs.executeScript(tabId, { file: 'parser/parse-page.js'}, () => {
+                    sendPageParsers(pageParsers, tabId);
+                });
+            }
+        });
+    }
+});
