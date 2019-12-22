@@ -1,4 +1,4 @@
-import { get, set } from './chrome-local';
+import { getLocal, setLocal } from './chrome';
 import { insertIntoSortedNumberArray, getOrDefault } from '../util';
 
 const BOOK_KEY_PREFIX = 'book';
@@ -16,27 +16,52 @@ const getBookKey = (hostname, bookTitle) => {
     return BOOK_KEY_PREFIX + ':' + hostname + ':' + bookTitle;
 };
 
-const getBookData = async (hostname, bookTitle) => {
-    const bookKey = getBookKey(hostname, bookTitle);
-    return getOrDefault(await get(bookKey), BOOK_SCHEMA);
+export const isValidBook = book => {
+    return typeof book.title === 'string' &&
+    typeof book.hostname === 'string' &&
+    typeof book.chapters === 'object' &&
+    typeof book.currentChapter === 'number' &&
+    typeof book.furthestChapter === 'number'; 
 };
 
-const saveBookData = async (hostname, bookTitle, data) => {
-    set(getBookKey(hostname, bookTitle), data);
+const getBookData = async (hostname, bookTitle) => {
+    return await getLocal(getBookKey(hostname, bookTitle));
 };
+
+const saveBookData = async (hostname, bookData) => {
+    setLocal(getBookKey(hostname, bookData.title), bookData);
+};
+
+const createNewBook = () => ({...BOOK_SCHEMA});
 
 export const upsertChapter = async (hostname, bookTitle, chapterNum) => {
-    const bookData = getBookData(hostname, bookTitle);
+    const bookData = getBookData(hostname, bookTitle) || createNewBook();
+
     bookData.chapters = insertIntoSortedNumberArray(bookData.chapters, chapterNum);
     bookData.hostname = hostname;
     bookData.title = bookTitle;
     bookData.currentChapter = chapterNum;
     bookData.furthestChapter = Math.max(bookData.furthestChapter, chapterNum);
-    saveBookData(hostname, bookTitle, bookData);
+
+    if (isValidBook(bookData)) {
+        saveBookData(hostname, bookData);
+    } else {
+        console.error('saving invalid book');
+    }
 }
 
 export const getCurrentChapter = async (hostname, bookTitle) => {
-    return await getBookData(hostname, bookTitle).getCurrentChapter;
+    const book = await getBookData(hostname, bookTitle);
+    if (book !== null) {
+        return book.currentChapter;
+    }
+    return null;
 }
 
-
+export const getFurthestChapter = async (hostname, bookTitle) => {
+    const book = await getBookData(hostname, bookTitle);
+    if (book !== null) {
+        return book.furthestChapter;
+    }
+    return null;
+}

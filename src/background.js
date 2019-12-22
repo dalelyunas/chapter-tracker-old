@@ -1,4 +1,4 @@
-import { getPageParsers } from './storage/page-parsers';
+import { getPageParser } from './storage/page-parser';
 import { upsertChapter } from './storage/book';
 
 const getHostnameUnsafe = url => {
@@ -6,14 +6,12 @@ const getHostnameUnsafe = url => {
     return parsed.hostname;
 };
 
-const isValidPageParsers = pageParsers => true; //pageParsers.bookTitleParser !== undefined && pageParsers.chapterNumberParser !== undefined;
-
 const isValidParsedData = data => data.bookTitle !== undefined && data.chapterNumber !== undefined && data.hostname !== undefined;
 
-const sendPageParsers = (pageParsers, tabId) => {
+const sendPageParser = (pageParser, tabId) => {
     const payload = {
-        type: 'apply_parsers',
-        pageParsers
+        type: 'apply_parser',
+        pageParser
     };
     chrome.tabs.sendMessage(tabId, payload, response => {
         console.log(response);
@@ -25,10 +23,10 @@ const sendPageParsers = (pageParsers, tabId) => {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (tab.active && changeInfo.url) {
-        getPageParsers(getHostnameUnsafe(changeInfo.url)).then(pageParsers => {
-            if (isValidPageParsers(pageParsers)) {
+        getPageParser(getHostnameUnsafe(changeInfo.url)).then(pageParser => {
+            if (pageParser !== null) {
                 chrome.tabs.executeScript(tabId, { file: 'parser/parse-page.js'}, () => {
-                    sendPageParsers(pageParsers, tabId);
+                    sendPageParser(pageParser, tabId);
                 });
             }
         });

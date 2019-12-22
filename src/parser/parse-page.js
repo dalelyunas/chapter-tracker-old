@@ -7,12 +7,13 @@ const performParse = parserFunctionString => {
 };
 
 chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
-  if (request.type == 'apply_parsers') {
-    const pageParsers = request.pageParsers;
+  if (request.type == 'apply_parser') {
+    chrome.runtime.onMessage.removeListener();
+    const pageParser = request.pageParser;
     console.log('responding');
     sendResponse({
-        bookTitle: performParse(pageParsers.bookTitleParser),
-        chapterNumber: performParse(pageParsers.chapterNumberParser),
+        bookTitle: performParse(pageParser.bookTitleParser),
+        chapterNumber: performParse(pageParser.chapterNumberParser),
         hostname: window.location.hostname
     });
   }
