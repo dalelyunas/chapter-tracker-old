@@ -18,21 +18,21 @@ const getBookKey = (hostname, bookTitle) => {
 
 export const isValidBook = book => {
     return typeof book.title === 'string' &&
-    typeof book.hostname === 'string' &&
-    typeof book.chapters === 'object' &&
-    typeof book.currentChapter === 'number' &&
-    typeof book.furthestChapter === 'number'; 
+        typeof book.hostname === 'string' &&
+        typeof book.chapters === 'object' &&
+        typeof book.currentChapter === 'number' &&
+        typeof book.furthestChapter === 'number';
 };
 
 const getBookData = async (hostname, bookTitle) => {
     return await getLocal(getBookKey(hostname, bookTitle));
 };
 
-const saveBookData = async (hostname, bookData) => {
-    setLocal(getBookKey(hostname, bookData.title), bookData);
+const saveBookData = async (bookData) => {
+    setLocal(getBookKey(bookData.hostname, bookData.title), bookData);
 };
 
-const createNewBook = () => ({...BOOK_SCHEMA});
+const createNewBook = () => ({ ...BOOK_SCHEMA });
 
 export const upsertChapter = async (hostname, bookTitle, chapterNum) => {
     const bookData = getBookData(hostname, bookTitle) || createNewBook();
@@ -44,7 +44,7 @@ export const upsertChapter = async (hostname, bookTitle, chapterNum) => {
     bookData.furthestChapter = Math.max(bookData.furthestChapter, chapterNum);
 
     if (isValidBook(bookData)) {
-        saveBookData(hostname, bookData);
+        saveBookData(bookData);
     } else {
         console.error('saving invalid book');
     }

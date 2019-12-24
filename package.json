@@ -14,6 +14,8 @@
     "watch:dev": "cross-env HMR=true npm run build:dev -- --watch"
   },
   "dependencies": {
+    "bootstrap": "^4.4.1",
+    "bootstrap-vue": "^2.1.0",
     "vue": "^2.6.10"
   },
   "devDependencies": {
@@ -34,7 +36,7 @@
     "node-sass": "^4.9.3",
     "sass-loader": "^7.1.0",
     "vue-loader": "^15.4.2",
-    "vue-template-compiler": "^2.6.10",
+    "vue-template-compiler": "^2.6.11",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2",
     "webpack-extension-reloader": "^1.1.0"

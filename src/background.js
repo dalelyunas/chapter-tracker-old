@@ -25,7 +25,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (tab.active && changeInfo.url) {
         getPageParser(getHostnameUnsafe(changeInfo.url)).then(pageParser => {
             if (pageParser !== null) {
-                chrome.tabs.executeScript(tabId, { file: 'parser/parse-page.js'}, () => {
+                chrome.tabs.executeScript(tabId, { file: 'parser/parse-page.js' }, () => {
                     sendPageParser(pageParser, tabId);
                 });
             }

@@ -1,25 +1,38 @@
 const get = (key, type) => {
-    return new Promise(resolve => {
-      type.get(key, result => {
-        if (result !== undefined) {
-          resolve(result[key]);
-        } else {
-          resolve(null);
-        }
-      });
+  return new Promise(resolve => {
+    type.get(key, result => {
+      if (result === {}) {
+        resolve(null);
+      } else {
+        resolve(result[key]);
+      }
     });
+  });
+};
+
+const del = (key, type) => {
+  return new Promise(resolve => {
+    console.log(key);
+    type.remove(key, result => {
+      resolve(result);
+    });
+  });
 };
 
 const getAll = type => {
-    return get(null, type);
+  return new Promise(resolve => {
+    type.get(null, result => {
+      resolve(result);
+    });
+  });
 };
 
 const set = (key, value, type) => {
-    return new Promise((resolve) => {
-      type.set({[key]: value }, (result) => {
-        resolve(result);
-      });
+  return new Promise((resolve) => {
+    type.set({ [key]: value }, (result) => {
+      resolve(result);
     });
+  });
 };
 
 export const getLocal = key => {
@@ -34,6 +47,10 @@ export const getAllLocal = () => {
   return getAll(chrome.storage.local);
 };
 
+export const deleteLocal = key => {
+  return del(key, chrome.storage.local)
+};
+
 export const getSync = key => {
   return get(key, chrome.storage.sync);
 };
@@ -44,4 +61,8 @@ export const setSync = (key, value) => {
 
 export const getAllSync = () => {
   return getAll(chrome.storage.sync);
+};
+
+export const deleteSync = key => {
+  return del(key, chrome.storage.sync);
 };

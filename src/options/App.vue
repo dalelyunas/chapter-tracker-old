@@ -1,36 +1,42 @@
 <template>
-  <div>
-    {{ parsers }}
+  <div class="container">
+    <div v-for="parser in parsers">
+      <parser-view v-bind:parser="parser" @deleteParser="deleteParser" />
+    </div>
   </div>
 </template>
 
 <script>
-import { getAllPageParsers, upsertPageParser } from '../storage/page-parser';
+import { getAllPageParsers, upsertPageParser, deletePageParser } from '../storage/page-parser';
 
 export default {
   name: "App",
   data () {
     return {
-      parsers: []
+      parsers: [],
+      newParser: {}
     };  
   },  
   created () {
-    getAllPageParsers().then(parsers => {
-      console.log(parsers);
-      this.parsers = parsers;
-    });
+    this.refreshParsers();
   },
   methods: {
-    saveSettings () {
-      _self.isSaving = true;
-      chrome.storage.set({
-        jiraUrl: _self.jiraUrl,
-        jiraUsername: _self.jiraUsername,
-        jiraMerge: _self.jiraMerge,
-        togglApiToken: _self.togglApiToken
-      }, function () {
-        _self.isSaving = false;
-        _self.showSnackbar = true;
+    saveParser() {
+      this.isSaving = true;
+      upsertPageParser({
+        hostname: this.newParser.hostname,
+        bookTitleParser: this.newParser.bookTitleParser,
+        chapterNumberParser: this.newParser.chapterNumberParser
+      }).then(() => this.refreshParsers());
+    },
+    deleteParser(parser) {
+      this.isSaving = true;
+      deletePageParser(parser.hostname).then(() => this.refreshParsers());
+    },
+    refreshParsers() {
+      getAllPageParsers().then(parsers => {
+        this.parsers = parsers;
+        this.newParser = {};
       });
     }
   }
