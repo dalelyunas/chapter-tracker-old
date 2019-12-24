@@ -12,10 +12,9 @@ const performParse = parserFunctionString => {
 };
 
 chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
+  chrome.runtime.onMessage.removeListener();
   if (request.type == 'apply_parser') {
-    chrome.runtime.onMessage.removeListener();
     const pageParser = request.pageParser;
-
     sendResponse({
       bookTitle: performParse(pageParser.bookTitleParser),
       chapterNumber: performParse(pageParser.chapterNumberParser),
