@@ -1,17 +1,15 @@
 <template>
-  <div>
-    <b-card title="{{parser.hostname}}">
-      <b-card-text>
-        <p>Book title parser</p>
-        <code>{{parser.bookTitleParser}}</code>
-      </b-card-text>
-      <b-card-text>
-        <p>Chapter number parser</p>
-        <code>{{parser.chapterNumberParser}}</code>
-      </b-card-text>
-      <b-button v-on:click="deleteParser" variant="danger">Delete</b-button>
-    </b-card>
-  </div>
+  <b-card v-bind:title="parser.hostname">
+    <b-card-text>
+      <p>Book title parser</p>
+      <code>{{parser.bookTitleParser}}</code>
+    </b-card-text>
+    <b-card-text>
+      <p>Chapter number parser</p>
+      <code>{{parser.chapterNumberParser}}</code>
+    </b-card-text>
+    <b-button v-on:click="deleteParser" variant="danger">Delete</b-button>
+  </b-card>
 </template>
 
 <script>

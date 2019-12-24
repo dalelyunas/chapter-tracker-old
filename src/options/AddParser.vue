@@ -1,32 +1,35 @@
 <template>
-  <div>
-    <b-container>
-      <b-row>
-        <p>Hostname</p>
-        <code>{{parser.bookTitleParser}}</code>
-      </b-row>
-      <b-row>
-        <p>Book title parser</p>
-        <code>{{parser.bookTitleParser}}</code>
-      </b-row>
-      <b-row>
-        <p>Chapter number parser</p>
-        <code>{{parser.chapterNumberParser}}</code>
-      </b-row>
-      <b-row>
-        <b-col>
-          <b-button v-on:click="deleteParser" variant="danger">Delete</b-button>
-        </b-col>
-      </b-row>
-    </b-container>
-  </div>
+  <b-card title="Add parser">
+    <b-card-text>
+      <b-form-group label="Hostname" label-for="hostnameInput">
+        <b-form-input id="hostnameInput" v-model="parser.hostname" />
+      </b-form-group>
+    </b-card-text>
+    <b-card-text>
+      <b-form-group label="Book title parser" label-for="bookTitleInput">
+        <b-form-input id="bookTitleInput" v-model="parser.bookTitleParser" />
+      </b-form-group>
+    </b-card-text>
+    <b-card-text>
+      <b-form-group
+        id="chapterNumberGroup"
+        label="Chapter number parser"
+        label-for="chapterNumberInput"
+      >
+        <b-form-input v-model="parser.chapterNumberParser" />
+      </b-form-group>
+    </b-card-text>
+    <b-button v-on:click="addParser" variant="success">Add</b-button>
+  </b-card>
 </template>
 
 <script>
 export default {
   name: "AddParser",
-  data: {
-    parser: {}
+  data() {
+    return {
+      parser: {}
+    };
   },
   methods: {
     addParser() {
@@ -38,10 +41,4 @@ export default {
 </script>
 
 <style scoped>
-code {
-  background-color: #eee;
-  border-radius: 3px;
-  font-family: courier, monospace;
-  padding: 0 3px;
-}
 </style>

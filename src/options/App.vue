@@ -3,30 +3,35 @@
     <div v-for="parser in parsers">
       <parser-view v-bind:parser="parser" @deleteParser="deleteParser" />
     </div>
+    <add-parser @addParser="saveParser" />
   </div>
 </template>
 
 <script>
-import { getAllPageParsers, upsertPageParser, deletePageParser } from '../storage/page-parser';
+import {
+  getAllPageParsers,
+  upsertPageParser,
+  deletePageParser
+} from "../storage/page-parser";
 
 export default {
   name: "App",
-  data () {
+  data() {
     return {
       parsers: [],
       newParser: {}
-    };  
-  },  
-  created () {
+    };
+  },
+  created() {
     this.refreshParsers();
   },
   methods: {
-    saveParser() {
+    saveParser(parser) {
       this.isSaving = true;
       upsertPageParser({
-        hostname: this.newParser.hostname,
-        bookTitleParser: this.newParser.bookTitleParser,
-        chapterNumberParser: this.newParser.chapterNumberParser
+        hostname: parser.hostname,
+        bookTitleParser: parser.bookTitleParser,
+        chapterNumberParser: parser.chapterNumberParser
       }).then(() => this.refreshParsers());
     },
     deleteParser(parser) {
