@@ -1,13 +1,9 @@
 <template>
-  <b-card v-bind:title="parser.hostname">
-    <b-card-text>
-      <p>Book title parser</p>
-      <code>{{parser.bookTitleParser}}</code>
-    </b-card-text>
-    <b-card-text>
-      <p>Chapter number parser</p>
-      <code>{{parser.chapterNumberParser}}</code>
-    </b-card-text>
+  <b-card class="parserCard" v-bind:title="parser.hostname">
+    <p>Book title parser</p>
+    <code>{{parser.bookTitleParser}}</code>
+    <p>Chapter number parser</p>
+    <code>{{parser.chapterNumberParser}}</code>
     <b-button v-on:click="deleteParser" variant="danger">Delete</b-button>
   </b-card>
 </template>
@@ -31,6 +27,15 @@ code {
   background-color: #eee;
   border-radius: 3px;
   font-family: courier, monospace;
-  padding: 0 3px;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+p {
+  margin-bottom: 5px;
+}
+
+.parserCard {
+  margin-bottom: 20px;
 }
 </style>

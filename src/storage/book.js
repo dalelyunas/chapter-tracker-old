@@ -1,5 +1,5 @@
 import { getLocal, setLocal } from './chrome';
-import { insertIntoSortedNumberArray, getOrDefault } from '../util';
+import { insertIntoSortedNumberArray } from '../util';
 
 const BOOK_KEY_PREFIX = 'book';
 
@@ -24,8 +24,8 @@ export const isValidBook = book => {
         typeof book.furthestChapter === 'number';
 };
 
-const getBookData = async (hostname, bookTitle) => {
-    return await getLocal(getBookKey(hostname, bookTitle));
+const getBookData = (hostname, bookTitle) => {
+    return getLocal(getBookKey(hostname, bookTitle));
 };
 
 const saveBookData = async (bookData) => {
@@ -35,7 +35,7 @@ const saveBookData = async (bookData) => {
 const createNewBook = () => ({ ...BOOK_SCHEMA });
 
 export const upsertChapter = async (hostname, bookTitle, chapterNum) => {
-    const bookData = getBookData(hostname, bookTitle) || createNewBook();
+    const bookData = await getBookData(hostname, bookTitle) || createNewBook();
 
     bookData.chapters = insertIntoSortedNumberArray(bookData.chapters, chapterNum);
     bookData.hostname = hostname;
@@ -46,7 +46,7 @@ export const upsertChapter = async (hostname, bookTitle, chapterNum) => {
     if (isValidBook(bookData)) {
         saveBookData(bookData);
     } else {
-        console.error('saving invalid book');
+        console.error('Saving invalid book');
     }
 }
 

@@ -1,9 +1,10 @@
 <template>
   <div class="container">
-    <div v-for="parser in parsers">
+    <h1>Hostname Parsers</h1>
+    <div v-for="parser in parsers" v-bind:key="parser.hostname">
       <parser-view v-bind:parser="parser" @deleteParser="deleteParser" />
     </div>
-    <add-parser @addParser="saveParser" />
+    <add-parser-form @addParser="saveParser" />
   </div>
 </template>
 

@@ -1,10 +1,11 @@
 const get = (key, type) => {
   return new Promise(resolve => {
     type.get(key, result => {
-      if (result === {}) {
+      const val = result[key];
+      if (val === undefined) {
         resolve(null);
       } else {
-        resolve(result[key]);
+        resolve(val);
       }
     });
   });
@@ -12,7 +13,6 @@ const get = (key, type) => {
 
 const del = (key, type) => {
   return new Promise(resolve => {
-    console.log(key);
     type.remove(key, result => {
       resolve(result);
     });

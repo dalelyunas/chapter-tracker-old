@@ -2,14 +2,6 @@ import { setSync, getAllSync, getSync, deleteSync } from './chrome';
 
 const PAGE_PARSER_KEY_PREFIX = 'page_parser';
 
-// page parsers are javascript functions that 
-// given context (hostname and dom) produce 
-// a book name and chapter number
-// const PAGE_PARSER_SCHEMA = {
-//     bookTitleParser: undefined,
-//     chapterNumberParser: undefined
-// };
-
 const getPageParserKey = hostname => {
     return PAGE_PARSER_KEY_PREFIX + ':' + hostname;
 };
@@ -39,6 +31,8 @@ export const getPageParser = async hostname => {
 export const upsertPageParser = async (pageParser) => {
     if (isValidPageParser(pageParser)) {
         setSync(getPageParserKey(pageParser.hostname), pageParser);
+    } else {
+        console.error('Saving invalid parser')
     }
 };
 

@@ -14,7 +14,6 @@ const sendPageParser = (pageParser, tabId) => {
         pageParser
     };
     chrome.tabs.sendMessage(tabId, payload, response => {
-        console.log(response);
         if (isValidParsedData(response)) {
             upsertChapter(response.hostname, response.bookTitle, response.chapterNumber);
         }
