@@ -2,7 +2,7 @@
   <div>
     <p>Book title: {{bookTitle}}</p>
     <p>Current chapter: {{currentChapter}}</p>
-    <p>Furthest chapter: {{furthestChapter}}</p>
+    <p>Chapters: {{chapters}}</p>
   </div>
 </template>
 
@@ -10,13 +10,13 @@
 import {
   getLastViewedBook,
   getCurrentChapter,
-  getFurthestChapter
+  getChapters
 } from "../storage/book";
 export default {
   data() {
     return {
       currentChapter: undefined,
-      furthestChapter: undefined,
+      chapters: [],
       bookTitle: undefined
     };
   },
@@ -27,8 +27,8 @@ export default {
     getLastViewedBookData() {
       getLastViewedBook().then(data => {
         this.bookTitle = data.bookTitle;
-        getFurthestChapter(data.hostname, data.bookTitle).then(chapter => {
-          this.furthestChapter = chapter;
+        getChapters(data.hostname, data.bookTitle).then(chapters => {
+          this.chapters = chapters;
         });
         getCurrentChapter(data.hostname, data.bookTitle).then(chapter => {
           this.currentChapter = chapter;

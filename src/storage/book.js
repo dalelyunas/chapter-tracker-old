@@ -1,16 +1,33 @@
 import { getLocal, setLocal, deleteLocal } from './chrome';
-import { insertIntoSortedNumberArray } from '../util';
 
 const LAST_VIEWED_BOOK_KEY = "last_viewed_book";
 const BOOK_KEY_PREFIX = 'book';
+
+export const insertIntoSortedNumberArray = (arr, val) => {
+    const resultArr = new Array(arr.length + 1);
+    resultArr[0] = val;
+    let arrIndex = 0;
+    for (let i = 1; i < resultArr.length; i += 1) {
+        resultArr[i] = arr[arrIndex];
+        arrIndex += 1;
+        if (resultArr[i] === resultArr[i - 1]) {
+            return arr;
+        }
+        if (resultArr[i] < resultArr[i - 1]) {
+            const tmp = resultArr[i];
+            resultArr[i] = resultArr[i - 1];
+            resultArr[i - 1] = tmp;
+        }
+    }
+    return resultArr;
+};
 
 // a book under a hostname holds the chapters you have read for it
 const BOOK_SCHEMA = {
     title: undefined,
     hostname: undefined,
     chapters: [],
-    currentChapter: undefined,
-    furthestChapter: -1
+    currentChapter: undefined
 };
 
 const getBookKey = (hostname, bookTitle) => {
@@ -21,8 +38,7 @@ export const isValidBook = book => {
     return typeof book.title === 'string' &&
         typeof book.hostname === 'string' &&
         typeof book.chapters === 'object' &&
-        typeof book.currentChapter === 'number' &&
-        typeof book.furthestChapter === 'number';
+        typeof book.currentChapter === 'number'
 };
 
 const getBookData = (hostname, bookTitle) => {
@@ -42,7 +58,6 @@ export const upsertChapter = async (hostname, bookTitle, chapterNum) => {
     bookData.hostname = hostname;
     bookData.title = bookTitle;
     bookData.currentChapter = chapterNum;
-    bookData.furthestChapter = Math.max(bookData.furthestChapter, chapterNum);
 
     if (isValidBook(bookData)) {
         saveBookData(bookData);
@@ -59,10 +74,10 @@ export const getCurrentChapter = async (hostname, bookTitle) => {
     return null;
 };
 
-export const getFurthestChapter = async (hostname, bookTitle) => {
+export const getChapters = async (hostname, bookTitle) => {
     const book = await getBookData(hostname, bookTitle);
     if (book !== null) {
-        return book.furthestChapter;
+        return book.chapters;
     }
     return null;
 };
