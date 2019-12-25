@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "A Vue.js web extension",
   "author": "dalelyunas",
-  "license": "MIT",
   "scripts": {
     "prettier": "prettier \"src/**/*.{js,vue}\"",
     "prettier:write": "npm run prettier -- --write",
