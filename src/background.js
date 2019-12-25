@@ -6,18 +6,14 @@ const getHostnameUnsafe = url => {
     return parsed.hostname;
 };
 
-const isValidParsedData = data => data !== undefined && data.bookTitle !== undefined && data.chapterNumber !== undefined && data.hostname !== undefined;
-
 const sendPageParser = (pageParser, tabId) => {
     const payload = {
         type: 'apply_parser',
         pageParser
     };
     chrome.tabs.sendMessage(tabId, payload, response => {
-        if (isValidParsedData(response)) {
-            upsertChapter(response.hostname, response.bookTitle, response.chapterNumber);
-            saveLastViewedBook(response.hostname, response.bookTitle);
-        }
+        upsertChapter(response.hostname, response.bookTitle, response.chapterNumber);
+        saveLastViewedBook(response.hostname, response.bookTitle);
     });
 };
 
