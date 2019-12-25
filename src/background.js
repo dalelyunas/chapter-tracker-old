@@ -1,12 +1,12 @@
 import { getPageParser } from './storage/page-parser';
-import { upsertChapter } from './storage/book';
+import { upsertChapter, saveLastViewedBook } from './storage/book';
 
 const getHostnameUnsafe = url => {
     const parsed = new URL(url);
     return parsed.hostname;
 };
 
-const isValidParsedData = data => data.bookTitle !== undefined && data.chapterNumber !== undefined && data.hostname !== undefined;
+const isValidParsedData = data => data !== undefined && data.bookTitle !== undefined && data.chapterNumber !== undefined && data.hostname !== undefined;
 
 const sendPageParser = (pageParser, tabId) => {
     const payload = {
@@ -16,6 +16,7 @@ const sendPageParser = (pageParser, tabId) => {
     chrome.tabs.sendMessage(tabId, payload, response => {
         if (isValidParsedData(response)) {
             upsertChapter(response.hostname, response.bookTitle, response.chapterNumber);
+            saveLastViewedBook(response.hostname, response.bookTitle);
         }
     });
 };

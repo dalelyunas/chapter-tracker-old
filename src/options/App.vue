@@ -28,7 +28,6 @@ export default {
   },
   methods: {
     saveParser(parser) {
-      this.isSaving = true;
       upsertPageParser({
         hostname: parser.hostname,
         bookTitleParser: parser.bookTitleParser,
@@ -36,7 +35,6 @@ export default {
       }).then(() => this.refreshParsers());
     },
     deleteParser(parser) {
-      this.isSaving = true;
       deletePageParser(parser.hostname).then(() => this.refreshParsers());
     },
     refreshParsers() {

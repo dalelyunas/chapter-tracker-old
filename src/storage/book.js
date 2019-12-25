@@ -1,6 +1,7 @@
-import { getLocal, setLocal } from './chrome';
+import { getLocal, setLocal, deleteLocal } from './chrome';
 import { insertIntoSortedNumberArray } from '../util';
 
+const LAST_VIEWED_BOOK_KEY = "last_viewed_book";
 const BOOK_KEY_PREFIX = 'book';
 
 // a book under a hostname holds the chapters you have read for it
@@ -48,7 +49,7 @@ export const upsertChapter = async (hostname, bookTitle, chapterNum) => {
     } else {
         console.error('Saving invalid book');
     }
-}
+};
 
 export const getCurrentChapter = async (hostname, bookTitle) => {
     const book = await getBookData(hostname, bookTitle);
@@ -56,7 +57,7 @@ export const getCurrentChapter = async (hostname, bookTitle) => {
         return book.currentChapter;
     }
     return null;
-}
+};
 
 export const getFurthestChapter = async (hostname, bookTitle) => {
     const book = await getBookData(hostname, bookTitle);
@@ -64,4 +65,16 @@ export const getFurthestChapter = async (hostname, bookTitle) => {
         return book.furthestChapter;
     }
     return null;
+};
+
+export const getLastViewedBook = () => {
+    return getLocal(LAST_VIEWED_BOOK_KEY);
+};
+
+export const saveLastViewedBook = (hostname, bookTitle) => {
+    return setLocal(LAST_VIEWED_BOOK_KEY, { hostname, bookTitle });
+};
+
+export const clearLastViewedBook = () => {
+    return deleteLocal(LAST_VIEWED_BOOK_KEY);
 }
