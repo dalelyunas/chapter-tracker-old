@@ -37,7 +37,7 @@ const getBookKey = (hostname, bookTitle) => {
 export const isValidBook = book => {
     return typeof book.title === 'string' &&
         typeof book.hostname === 'string' &&
-        typeof book.chapters === 'object' &&
+        Array.isArray(book.chapters) &&
         typeof book.currentChapter === 'number' &&
         !isNaN(book.currentChapter);
 };
