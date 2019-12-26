@@ -38,7 +38,8 @@ export const isValidBook = book => {
     return typeof book.title === 'string' &&
         typeof book.hostname === 'string' &&
         typeof book.chapters === 'object' &&
-        typeof book.currentChapter === 'number'
+        typeof book.currentChapter === 'number' &&
+        !isNaN(book.currentChapter);
 };
 
 const getBookData = (hostname, bookTitle) => {

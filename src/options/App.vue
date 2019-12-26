@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Hostname Parsers</h1>
+    <h2 class="title">Hostname Parsers</h2>
     <div v-for="parser in parsers" v-bind:key="parser.hostname">
       <parser-view v-bind:parser="parser" @deleteParser="deleteParser" />
     </div>
@@ -48,7 +48,7 @@ export default {
 </script>
 
 <style scoped>
-p {
-  font-size: 20px;
+.title {
+  margin-bottom: 20px;
 }
 </style>

@@ -8,7 +8,6 @@ const getPageParserKey = hostname => {
 
 export const getAllPageParsers = async () => {
     const allItems = await getAllSync();
-    console.log(allItems);
     const parserItems = []
     for (let key of Object.keys(allItems)) {
         if (key.startsWith(PAGE_PARSER_KEY_PREFIX)) {

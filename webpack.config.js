@@ -13,7 +13,7 @@ const config = {
     'background': './background.js',
     'popup/popup': './popup/popup.js',
     'options/options': './options/options.js',
-    'parser/parse-page': './parser/parse-page.js'
+    'content-script': './content-script.js'
   },
   output: {
     path: __dirname + '/dist',

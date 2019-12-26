@@ -1,7 +1,7 @@
 {
   "name": "chapter-tracker",
-  "description": "A Vue.js web extension",
-  "version": null,
+  "description": "Tracks chapters as you read them",
+  "version": 1.0,
   "manifest_version": 2,
   "icons": {
     "48": "icons/icon_48.png",
@@ -24,6 +24,8 @@
     "storage",
     "tabs",
     "https://*/*",
-    "http://*/*"
+    "http://*/*",
+    "unlimitedStorage",
+    "notifications"
   ]
 }
