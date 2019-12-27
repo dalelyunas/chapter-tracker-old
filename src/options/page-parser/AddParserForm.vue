@@ -5,7 +5,7 @@
     </b-form-group>
 
     <b-form-group label="Book title parser" label-for="bookTitleInput">
-      <b-form-input id="bookTitleInput" v-model="bookTitleParser" />
+      <b-form-textarea id="bookTitleInput" v-model="bookTitleParser" rows="2" max-rows="2" />
     </b-form-group>
 
     <b-form-group
@@ -13,7 +13,7 @@
       label="Chapter number parser"
       label-for="chapterNumberInput"
     >
-      <b-form-input v-model="chapterNumberParser" />
+      <b-form-textarea v-model="chapterNumberParser" rows="2" max-rows="2" />
     </b-form-group>
 
     <b-button
