@@ -7,6 +7,7 @@ import VueHighlightJS from 'vue-highlightjs';
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import "highlight.js/styles/github.css";
 
 Vue.component('b-button', BButton);
 Vue.component('b-card', BCard);
