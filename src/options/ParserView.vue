@@ -2,11 +2,11 @@
   <b-card class="parserCard" v-bind:title="parser.hostname">
     <div class="codeGroup">
       <p>Book title parser</p>
-      <code>{{parser.bookTitleParser}}</code>
+      <pre v-highlightjs="parser.bookTitleParser"><code class="javascript"></code></pre>
     </div>
     <div class="codeGroup">
       <p>Chapter number parser</p>
-      <code>{{parser.chapterNumberParser}}</code>
+      <pre v-highlightjs="parser.chapterNumberParser"><code class="javascript"></code></pre>
     </div>
     <b-button v-on:click="deleteParser" variant="danger">Delete</b-button>
   </b-card>
@@ -27,13 +27,6 @@ export default {
 </script>
 
 <style scoped>
-code {
-  background-color: #eee;
-  border-radius: 3px;
-  font-family: courier, monospace;
-  padding: 5px;
-}
-
 p {
   margin-bottom: 5px;
 }

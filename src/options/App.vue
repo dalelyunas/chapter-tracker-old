@@ -1,6 +1,10 @@
 <template>
   <div class="container">
-    <h2 class="title">Hostname Parsers</h2>
+    <h1>Settings</h1>
+    <h2 class="title">Page Parsers</h2>
+    <b-card title="Instructions">
+      <p>A page parser is the body of a function that takes the path and document of a page as arguments</p>
+    </b-card>
     <div v-for="parser in parsers" v-bind:key="parser.hostname">
       <parser-view v-bind:parser="parser" @deleteParser="deleteParser" />
     </div>
