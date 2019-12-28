@@ -1,8 +1,9 @@
 <template>
   <div>
+    <h3>Instructions</h3>
     <parser-instructions />
-    <h2 class="title">Page Parsers</h2>
-    <div class="parserContainer">
+    <h3>Page Parsers</h3>
+    <div class="parsersContainer">
       <parser-view
         v-for="parser in parsers"
         v-bind:key="parser.hostname"
@@ -54,11 +55,7 @@ export default {
 </script>
 
 <style scoped>
-.title {
-  margin-bottom: 20px;
-}
-
-.parserContainer {
+.parsersContainer {
   overflow-y: scroll;
   max-height: 800px;
   margin-bottom: 20px;

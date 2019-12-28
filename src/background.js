@@ -1,6 +1,7 @@
 import { getPageParser } from './storage/page-parser';
 import { upsertChapter, saveLastViewedBook } from './storage/book';
 
+const IGNORE_PARSE_RESULT_VALUE = 'ignore_parse_result';
 const getHostnameUnsafe = url => {
     const parsed = new URL(url);
     return parsed.hostname;
@@ -15,8 +16,8 @@ const isValidParseResult = result => result !== undefined &&
 const isErrorResult = result => result !== undefined && result.error !== undefined;
 
 const isIgnoreResult = result => result !== undefined &&
-    (result.chapterNumber === 'ignore_parse_result' ||
-        result.bookTitle === 'ignore_parse_result');
+    (result.chapterNumber === IGNORE_PARSE_RESULT_VALUE ||
+        result.bookTitle === IGNORE_PARSE_RESULT_VALUE);
 
 const sendNotification = (title, hostname, message) => {
     chrome.notifications.clear('parse_failed', () => {

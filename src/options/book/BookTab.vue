@@ -1,31 +1,26 @@
 <template>
   <div>
     <h2 class="title">Books</h2>
-    <parser-instructions />
-    <div class="bookContainer">
-      <book-view
-        v-for="book in books"
-        v-bind:key="book.title"
-        v-bind:parser="book"
+    <div class="bookGroupContainer">
+      <book-view-group
+        v-for="group in bookGroups"
+        v-bind:key="group.hostname"
+        v-bind:hostname="group.hostname"
+        v-bind:books="group.books"
         @deleteBook="deleteBook"
       />
     </div>
-    <add-parser-form @addParser="saveParser" />
   </div>
 </template>
 
 <script>
-import {
-  getAllPageParsers,
-  upsertPageParser,
-  deletePageParser
-} from "../storage/page-parser";
+import { getAllBooks, deleteBook } from "../../storage/book";
 
 export default {
   name: "BookTab",
   data() {
     return {
-      books: []
+      bookGroups: []
     };
   },
   created() {
@@ -37,7 +32,18 @@ export default {
     },
     refreshBooks() {
       getAllBooks().then(books => {
-        this.books = books;
+        const reducer = (groups, book) => {
+          if (book.hostname in groups) {
+            groups[book.hostname].books.push(book);
+          } else {
+            groups[book.hostname] = {
+              hostname: book.hostname,
+              books: [book]
+            };
+          }
+          return groups;
+        };
+        this.bookGroups = books.reduce(reducer, {});
       });
     }
   }

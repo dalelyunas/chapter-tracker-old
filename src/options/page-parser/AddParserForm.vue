@@ -8,12 +8,8 @@
       <b-form-textarea id="bookTitleInput" v-model="bookTitleParser" rows="2" max-rows="2" />
     </b-form-group>
 
-    <b-form-group
-      id="chapterNumberGroup"
-      label="Chapter number parser"
-      label-for="chapterNumberInput"
-    >
-      <b-form-textarea v-model="chapterNumberParser" rows="2" max-rows="2" />
+    <b-form-group label="Chapter number parser" label-for="chapterNumberInput">
+      <b-form-textarea id="chapterNumberInput" v-model="chapterNumberParser" rows="2" max-rows="2" />
     </b-form-group>
 
     <b-button

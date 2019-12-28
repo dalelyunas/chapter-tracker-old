@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h4>Instructions</h4>
     <p>Each component of a page parser is the body of a function that takes the pathname and document of a page as arguments. Each component will be evaluated as the body of the following function once on relevant pages. The resulting data will be validated and stored.</p>
     <pre v-highlightjs><code class="javascript">function executePageParserComponent(pathname, document) { 
       // Page parser component goes here 

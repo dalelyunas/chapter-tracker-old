@@ -23,18 +23,18 @@ export const isValidPageParser = pageParser => {
         typeof pageParser.hostname === 'string';
 }
 
-export const getPageParser = async hostname => {
-    return await getSync(getPageParserKey(hostname));
+export const getPageParser = hostname => {
+    return getSync(getPageParserKey(hostname));
 };
 
-export const upsertPageParser = async (pageParser) => {
+export const upsertPageParser = pageParser => {
     if (isValidPageParser(pageParser)) {
-        setSync(getPageParserKey(pageParser.hostname), pageParser);
+        return setSync(getPageParserKey(pageParser.hostname), pageParser);
     } else {
         console.error('Saving invalid parser')
     }
 };
 
-export const deletePageParser = async hostname => {
-    return await deleteSync(getPageParserKey(hostname));
+export const deletePageParser = hostname => {
+    return deleteSync(getPageParserKey(hostname));
 };

@@ -1,4 +1,4 @@
-import { getLocal, setLocal, deleteLocal } from './chrome';
+import { getLocal, setLocal, deleteLocal, getAllLocal } from './chrome';
 
 const LAST_VIEWED_BOOK_KEY = "last_viewed_book";
 const BOOK_KEY_PREFIX = 'book';
@@ -46,8 +46,8 @@ const getBookData = (hostname, bookTitle) => {
     return getLocal(getBookKey(hostname, bookTitle));
 };
 
-const saveBookData = async (bookData) => {
-    setLocal(getBookKey(bookData.hostname, bookData.title), bookData);
+const saveBookData = bookData => {
+    return setLocal(getBookKey(bookData.hostname, bookData.title), bookData);
 };
 
 const createNewBook = () => ({ ...BOOK_SCHEMA });
@@ -81,6 +81,21 @@ export const getChapters = async (hostname, bookTitle) => {
         return book.chapters;
     }
     return null;
+};
+
+export const getAllBooks = async () => {
+    const allItems = await getAllLocal();
+    const bookItems = []
+    for (let key of Object.keys(allItems)) {
+        if (key.startsWith(BOOK_KEY_PREFIX)) {
+            bookItems.push(allItems[key]);
+        }
+    }
+    return bookItems;
+};
+
+export const deleteBook = (hostname, bookTitle) => {
+    return deleteLocal(getBookKey(hostname, bookTitle));
 };
 
 export const getLastViewedBook = () => {
