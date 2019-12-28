@@ -1,7 +1,7 @@
 <template>
-  <div class="bookGroupContainer">
-    <b-button v-b-toggle="hostname + 'Id'" variant="primary">{{hostname}}</b-button>
-    <b-collapse v-bind:id="hostname + 'Id'">
+  <div>
+    <b-button class="bookGroupButton" v-b-toggle="hostname + 'Id'" variant="primary">{{hostname}}</b-button>
+    <b-collapse v-bind:id="hostname + 'Id'" accordion="hostnamesAccordion">
       <div class="bookViewsContainer">
         <book-view
           v-for="book in books"
@@ -36,7 +36,7 @@ export default {
   margin-bottom: 20px;
 }
 
-.bookGroupContainer {
+.bookGroupButton {
   margin-bottom: 20px;
 }
 </style>

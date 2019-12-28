@@ -1,11 +1,11 @@
 <template>
   <b-card class="parserCard" v-bind:title="parser.hostname">
     <div class="codeGroup">
-      <p>Book title parser</p>
+      <h6>Book title parser</h6>
       <pre v-highlightjs="parser.bookTitleParser"><code class="javascript"></code></pre>
     </div>
     <div class="codeGroup">
-      <p>Chapter number parser</p>
+      <h6>Chapter number parser</h6>
       <pre v-highlightjs="parser.chapterNumberParser"><code class="javascript"></code></pre>
     </div>
     <b-button v-on:click="deleteParser" variant="danger">Delete</b-button>

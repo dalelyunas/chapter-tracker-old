@@ -24,13 +24,15 @@ export default {
     };
   },
   created() {
-    this.refreshBooks();
+    this.refreshBookGroups();
   },
   methods: {
     deleteBook(book) {
-      deleteBook(book.hostname, book.title).then(() => this.refreshBooks());
+      deleteBook(book.hostname, book.title).then(() =>
+        this.refreshBookGroups()
+      );
     },
-    refreshBooks() {
+    refreshBookGroups() {
       getAllBooks().then(books => {
         const reducer = (groups, book) => {
           if (book.hostname in groups) {
