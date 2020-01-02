@@ -38,7 +38,7 @@ const sendErrorNotification = parseResult => {
 };
 
 export const storeSeenChapter = async (hostname, bookTitle, chapterNum) => {
-    const book = await getBookByKey(hostname, bookTitle) || new Book(hostname, title, [], null);
+    const book = await getBookByKey(hostname, bookTitle) || new Book(hostname, bookTitle, [], null);
     book.addChapter(chapterNum);
     return saveBook(book);
 };
