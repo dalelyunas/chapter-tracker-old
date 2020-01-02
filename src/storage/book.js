@@ -1,9 +1,8 @@
-import { getLocal, setLocal, deleteLocal, getAllLocal } from './chrome';
+import { localStorage } from './chrome';
 
-const LAST_VIEWED_BOOK_KEY = "last_viewed_book";
 const BOOK_KEY_PREFIX = 'book';
 
-export const insertIntoSortedNumberArray = (arr, val) => {
+const insertIntoSortedNumberArray = (arr, val) => {
     const resultArr = new Array(arr.length + 1);
     resultArr[0] = val;
     let arrIndex = 0;
@@ -22,90 +21,50 @@ export const insertIntoSortedNumberArray = (arr, val) => {
     return resultArr;
 };
 
-// a book under a hostname holds the chapters you have read for it
-const BOOK_SCHEMA = {
-    title: undefined,
-    hostname: undefined,
-    chapters: [],
-    currentChapter: undefined
-};
-
 const getBookKey = (hostname, bookTitle) => {
     return BOOK_KEY_PREFIX + ':' + hostname + ':' + bookTitle;
 };
 
-export const isValidBook = book => {
-    return typeof book.title === 'string' &&
-        typeof book.hostname === 'string' &&
-        Array.isArray(book.chapters) &&
-        typeof book.currentChapter === 'number' &&
-        !isNaN(book.currentChapter);
-};
-
-const getBookData = (hostname, bookTitle) => {
-    return getLocal(getBookKey(hostname, bookTitle));
-};
-
-const saveBookData = bookData => {
-    return setLocal(getBookKey(bookData.hostname, bookData.title), bookData);
-};
-
-const createNewBook = () => ({ ...BOOK_SCHEMA });
-
-export const upsertChapter = async (hostname, bookTitle, chapterNum) => {
-    const bookData = await getBookData(hostname, bookTitle) || createNewBook();
-
-    bookData.chapters = insertIntoSortedNumberArray(bookData.chapters, chapterNum);
-    bookData.hostname = hostname;
-    bookData.title = bookTitle;
-    bookData.currentChapter = chapterNum;
-
-    if (isValidBook(bookData)) {
-        saveBookData(bookData);
-    } else {
-        console.error('Saving invalid book');
+export class Book {
+    constructor(hostname, title, chapters, currentChapter) {
+        this.hostname = hostname;
+        this.title = title;
+        this.chapters = chapters;
+        this.currentChapter = currentChapter;
     }
-};
-
-export const getCurrentChapter = async (hostname, bookTitle) => {
-    const book = await getBookData(hostname, bookTitle);
-    if (book !== null) {
-        return book.currentChapter;
+    addChapter(chapterNum) {
+        this.chapters = insertIntoSortedNumberArray(this.chapters, chapterNum);
+        this.currentChapter = chapterNum
     }
-    return null;
-};
-
-export const getChapters = async (hostname, bookTitle) => {
-    const book = await getBookData(hostname, bookTitle);
-    if (book !== null) {
-        return book.chapters;
+    isValid() {
+        return typeof this.title === 'string' &&
+            typeof this.hostname === 'string' &&
+            Array.isArray(this.chapters) &&
+            typeof this.currentChapter === 'number' &&
+            !isNaN(this.currentChapter);
     }
-    return null;
-};
-
-export const getAllBooks = async () => {
-    const allItems = await getAllLocal();
-    const bookItems = []
-    for (let key of Object.keys(allItems)) {
-        if (key.startsWith(BOOK_KEY_PREFIX)) {
-            bookItems.push(allItems[key]);
-        }
+    getKey() {
+        return getBookKey(this.hostname, this.title);
     }
-    return bookItems;
-};
-
-export const deleteBook = (hostname, bookTitle) => {
-    return deleteLocal(getBookKey(hostname, bookTitle));
-};
-
-export const getLastViewedBook = () => {
-    return getLocal(LAST_VIEWED_BOOK_KEY);
-};
-
-export const saveLastViewedBook = (hostname, bookTitle) => {
-    return setLocal(LAST_VIEWED_BOOK_KEY, { hostname, bookTitle });
-};
-
-export const clearLastViewedBook = () => {
-    return deleteLocal(LAST_VIEWED_BOOK_KEY);
 }
+
+export const getBookByKey = (hostname, bookTitle) => {
+    return localStorage.get(getBookKey(hostname, bookTitle));
+};
+
+export const saveBook = book => {
+    if (book.isValid()) {
+        return localStorage.set(book.getKey(), book);
+    } else {
+        console.log('Saving invalid book')
+        return Promise.reject();
+    }
+};
+
+export const getAllBooks = () => {
+    return localStorage.getAll(BOOK_KEY_PREFIX);
+};
+
+export const deleteBookByKey = (hostname, bookTitle) => {
+    return localStorage.delete(getBookKey(hostname, bookTitle));
+};

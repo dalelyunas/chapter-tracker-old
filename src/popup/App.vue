@@ -7,11 +7,8 @@
 </template>
 
 <script>
-import {
-  getLastViewedBook,
-  getCurrentChapter,
-  getChapters
-} from "../storage/book";
+import { getLastViewedBook } from "../storage/last-viewed-book";
+import { getBookByKey } from "../storage/book";
 
 export default {
   data() {
@@ -27,14 +24,13 @@ export default {
   },
   methods: {
     getLastViewedBookData() {
-      getLastViewedBook().then(data => {
-        this.bookTitle = data.bookTitle;
-        this.hostname = data.hostname;
-        getChapters(data.hostname, data.bookTitle).then(chapters => {
-          this.chapters = chapters.slice(-5);
-        });
-        getCurrentChapter(data.hostname, data.bookTitle).then(chapter => {
-          this.currentChapter = chapter;
+      getLastViewedBook().then(lastViewedBook => {
+        this.bookTitle = lastViewedBook.title;
+        this.hostname = lastViewedBook.hostname;
+
+        getBookByKey(hostname, bookTitle).then(book => {
+          this.chapters = book.chapters;
+          this.currentChapter = book.currentChapter;
         });
       });
     }

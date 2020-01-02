@@ -1,17 +1,11 @@
 import { getPageParser } from './storage/page-parser';
-import { upsertChapter, saveLastViewedBook } from './storage/book';
+import { Book, saveBook, getBookByKey } from './storage/book';
 
 const IGNORE_PARSE_RESULT_VALUE = 'ignore_parse_result';
-const getHostnameUnsafe = url => {
-    const parsed = new URL(url);
-    return parsed.hostname;
-};
 
-const isValidParseResult = result => result !== undefined &&
-    typeof result.bookTitle === 'string' &&
-    typeof result.chapterNumber === 'number' &&
-    !isNaN(result.chapterNumber) &&
-    typeof result.hostname === 'string';
+const getHostnameUnsafe = url => {
+    return new URL(url).hostname;
+};
 
 const isErrorResult = result => result !== undefined && result.error !== undefined;
 
@@ -42,16 +36,23 @@ const sendErrorNotification = parseResult => {
     sendNotification('Error: ', parseResult.hostname, parseResult.error);
 };
 
-const handleParseResult = parseResult => {
-    if (isValidParseResult(parseResult)) {
-        upsertChapter(parseResult.hostname, parseResult.bookTitle, parseResult.chapterNumber);
-        saveLastViewedBook(parseResult.hostname, parseResult.bookTitle);
-    } else if (isErrorResult(parseResult)) {
-        sendErrorNotification(parseResult);
-    } else if (isIgnoreResult(parseResult)) {
-        // Do nothing
+export const storeSeenChapter = async (hostname, bookTitle, chapterNum) => {
+    const book = await getBookByKey(hostname, bookTitle) || new Book(hostname, title, [], null);
+    book.addChapter(chapterNum);
+
+    if (book.isValid()) {
+        return saveBook(book);
     } else {
-        sendInvalidDataNotification(parseResult);
+        return Promise.reject();
+    }
+};
+
+const handleParseResult = parseResult => {
+    if (isErrorResult(parseResult)) {
+        sendErrorNotification(parseResult);
+    } else if (!isIgnoreResult(parseResult)) {
+        storeSeenChapter(parseResult.hostname, parseResult.bookTitle, parseResult.chapterNumber)
+            .catch(() => sendInvalidDataNotification(parseResult));
     }
 };
 

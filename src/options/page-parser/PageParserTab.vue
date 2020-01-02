@@ -17,9 +17,10 @@
 
 <script>
 import {
+  PageParser,
   getAllPageParsers,
-  upsertPageParser,
-  deletePageParser
+  savePageParser,
+  deletePageParserByKey
 } from "../../storage/page-parser";
 
 export default {
@@ -35,14 +36,16 @@ export default {
   },
   methods: {
     saveParser(parser) {
-      upsertPageParser({
-        hostname: parser.hostname,
-        bookTitleParser: parser.bookTitleParser,
-        chapterNumberParser: parser.chapterNumberParser
-      }).then(() => this.refreshParsers());
+      savePageParser(
+        new PageParser(
+          parser.hostname,
+          parser.bookTitleParser,
+          parser.chapterNumberParser
+        )
+      ).then(() => this.refreshParsers());
     },
     deleteParser(parser) {
-      deletePageParser(parser.hostname).then(() => this.refreshParsers());
+      deletePageParserByKey(parser.hostname).then(() => this.refreshParsers());
     },
     refreshParsers() {
       getAllPageParsers().then(parsers => {

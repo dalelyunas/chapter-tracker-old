@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { getAllBooks, deleteBook } from "../../storage/book";
+import { getAllBooks, deleteBookByKey } from "../../storage/book";
 
 export default {
   name: "BookTab",

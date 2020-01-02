@@ -1,0 +1,22 @@
+import { localStorage } from './chrome';
+
+const LAST_VIEWED_BOOK_KEY = "last_viewed_book";
+
+export class LastViewedBook {
+    constructor(hostname, title) {
+        this.hostname = hostname;
+        this.title = title;
+    }
+}
+
+export const getLastViewedBook = () => {
+    return localStorage.get(LAST_VIEWED_BOOK_KEY);
+};
+
+export const saveLastViewedBook = lastViewedBook => {
+    return localStorage.set(LAST_VIEWED_BOOK_KEY, lastViewedBook);
+};
+
+export const clearLastViewedBook = () => {
+    return localStorage.delete(LAST_VIEWED_BOOK_KEY);
+}

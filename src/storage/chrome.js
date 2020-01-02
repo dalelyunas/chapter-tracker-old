@@ -1,68 +1,58 @@
-const get = (key, type) => {
-  return new Promise(resolve => {
-    type.get(key, result => {
-      const val = result[key];
-      if (val === undefined) {
-        resolve(null);
-      } else {
-        resolve(val);
-      }
+class Storage {
+  constructor(type) {
+    this.type = type;
+  }
+
+  get(key) {
+    return new Promise(resolve => {
+      this.type.get(key, result => {
+        resolve(result[key] || null);
+      });
     });
-  });
-};
+  }
 
-const del = (key, type) => {
-  return new Promise(resolve => {
-    type.remove(key, result => {
-      resolve(result);
+  set(key, value) {
+    return new Promise((resolve) => {
+      this.type.set({ [key]: value }, (result) => {
+        resolve(result);
+      });
     });
-  });
-};
+  }
 
-const getAll = type => {
-  return new Promise(resolve => {
-    type.get(null, result => {
-      resolve(result);
+  delete(key) {
+    return new Promise(resolve => {
+      this.type.remove(key, result => {
+        resolve(result);
+      });
     });
-  });
-};
+  }
 
-const set = (key, value, type) => {
-  return new Promise((resolve) => {
-    type.set({ [key]: value }, (result) => {
-      resolve(result);
+  getAll(startingWith) {
+    return new Promise(resolve => {
+      this.type.get(null, result => {
+        const matching = []
+        for (let key of Object.keys(result)) {
+          if (key.startsWith(startingWith)) {
+            matching.push(result[key]);
+          }
+        }
+        resolve(matching);
+      });
     });
-  });
-};
+  }
+}
 
-export const getLocal = key => {
-  return get(key, chrome.storage.local);
-};
+class LocalStorage extends Storage {
+  constructor() {
+    super(chrome.storage.local);
+  }
+}
 
-export const setLocal = async (key, value) => {
-  return set(key, value, chrome.storage.local);
-};
+class SyncStorage extends Storage {
+  constructor() {
+    super(chrome.storage.sync);
+  }
+}
 
-export const getAllLocal = () => {
-  return getAll(chrome.storage.local);
-};
-
-export const deleteLocal = key => {
-  return del(key, chrome.storage.local)
-};
-
-export const getSync = key => {
-  return get(key, chrome.storage.sync);
-};
-
-export const setSync = (key, value) => {
-  return set(key, value, chrome.storage.sync);
-};
-
-export const getAllSync = () => {
-  return getAll(chrome.storage.sync);
-};
-
-export const deleteSync = key => {
-  return del(key, chrome.storage.sync);
-};
+export let localStorage = new LocalStorage();
+export let syncStorage = new SyncStorage();
