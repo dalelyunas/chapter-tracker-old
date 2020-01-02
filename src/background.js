@@ -1,5 +1,6 @@
-import { getPageParser } from './storage/page-parser';
+import { getPageParserByKey } from './storage/page-parser';
 import { Book, saveBook, getBookByKey } from './storage/book';
+import { LastViewedBook, saveLastViewedBook } from './storage/last-viewed-book';
 
 const IGNORE_PARSE_RESULT_VALUE = 'ignore_parse_result';
 
@@ -39,12 +40,7 @@ const sendErrorNotification = parseResult => {
 export const storeSeenChapter = async (hostname, bookTitle, chapterNum) => {
     const book = await getBookByKey(hostname, bookTitle) || new Book(hostname, title, [], null);
     book.addChapter(chapterNum);
-
-    if (book.isValid()) {
-        return saveBook(book);
-    } else {
-        return Promise.reject();
-    }
+    return saveBook(book);
 };
 
 const handleParseResult = parseResult => {
@@ -52,6 +48,7 @@ const handleParseResult = parseResult => {
         sendErrorNotification(parseResult);
     } else if (!isIgnoreResult(parseResult)) {
         storeSeenChapter(parseResult.hostname, parseResult.bookTitle, parseResult.chapterNumber)
+            .then(() => saveLastViewedBook(new LastViewedBook(parseResult.hostname, parseResult.bookTitle)))
             .catch(() => sendInvalidDataNotification(parseResult));
     }
 };
@@ -68,7 +65,7 @@ const sendPageParser = (pageParser, tabId) => {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (tab.active && changeInfo.url) {
-        getPageParser(getHostnameUnsafe(changeInfo.url)).then(pageParser => {
+        getPageParserByKey(getHostnameUnsafe(changeInfo.url)).then(pageParser => {
             if (pageParser !== null) {
                 chrome.tabs.executeScript(tabId, { file: 'content-script.js' }, () => {
                     sendPageParser(pageParser, tabId);

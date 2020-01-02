@@ -25,13 +25,14 @@ export default {
   methods: {
     getLastViewedBookData() {
       getLastViewedBook().then(lastViewedBook => {
-        this.bookTitle = lastViewedBook.title;
-        this.hostname = lastViewedBook.hostname;
-
-        getBookByKey(hostname, bookTitle).then(book => {
-          this.chapters = book.chapters;
-          this.currentChapter = book.currentChapter;
-        });
+        getBookByKey(lastViewedBook.hostname, lastViewedBook.title).then(
+          book => {
+            this.chapters = book.chapters.slice(-5);
+            this.currentChapter = book.currentChapter;
+            this.bookTitle = book.title;
+            this.hostname = book.hostname;
+          }
+        );
       });
     }
   }

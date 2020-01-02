@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     deleteBook(book) {
-      deleteBook(book.hostname, book.title).then(() =>
+      deleteBookByKey(book.hostname, book.title).then(() =>
         this.refreshBookGroups()
       );
     },

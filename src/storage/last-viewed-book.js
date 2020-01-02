@@ -9,8 +9,15 @@ export class LastViewedBook {
     }
 }
 
-export const getLastViewedBook = () => {
-    return localStorage.get(LAST_VIEWED_BOOK_KEY);
+const objLiteralToLastViewedBook = obj => {
+    if (obj === null) {
+        return null;
+    }
+    return new LastViewedBook(obj.hostname, obj.title);
+};
+
+export const getLastViewedBook = async () => {
+    return objLiteralToLastViewedBook(await localStorage.get(LAST_VIEWED_BOOK_KEY));
 };
 
 export const saveLastViewedBook = lastViewedBook => {

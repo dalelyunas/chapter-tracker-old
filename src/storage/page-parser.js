@@ -22,12 +22,20 @@ export class PageParser {
     }
 }
 
-export const getAllPageParsers = () => {
-    return syncStorage.getAll(PAGE_PARSER_KEY_PREFIX);
+const objLiteralToPageParser = obj => {
+    if (obj === null) {
+        return null;
+    }
+    return new PageParser(obj.hostname, obj.bookTitleParser, obj.chapterNumberParser);
 };
 
-export const getPageParserByKey = hostname => {
-    return syncStorage.get(getPageParserKey(hostname));
+export const getAllPageParsers = async () => {
+    const objs = await syncStorage.getAll(PAGE_PARSER_KEY_PREFIX);
+    return objs.map(obj => objLiteralToPageParser(obj));
+};
+
+export const getPageParserByKey = async hostname => {
+    return objLiteralToPageParser(await syncStorage.get(getPageParserKey(hostname)));
 };
 
 export const savePageParser = pageParser => {

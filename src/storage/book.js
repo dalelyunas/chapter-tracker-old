@@ -48,21 +48,29 @@ export class Book {
     }
 }
 
-export const getBookByKey = (hostname, bookTitle) => {
-    return localStorage.get(getBookKey(hostname, bookTitle));
+const objLiteralToBook = obj => {
+    if (obj === null) {
+        return null;
+    }
+    return new Book(obj.hostname, obj.title, obj.chapters, obj.currentChapter);
+};
+
+export const getBookByKey = async (hostname, bookTitle) => {
+    return objLiteralToBook(await localStorage.get(getBookKey(hostname, bookTitle)));
 };
 
 export const saveBook = book => {
     if (book.isValid()) {
         return localStorage.set(book.getKey(), book);
     } else {
-        console.log('Saving invalid book')
+        console.error('Saving invalid book')
         return Promise.reject();
     }
 };
 
-export const getAllBooks = () => {
-    return localStorage.getAll(BOOK_KEY_PREFIX);
+export const getAllBooks = async () => {
+    const objs = await localStorage.getAll(BOOK_KEY_PREFIX);
+    return objs.map(obj => objLiteralToBook(obj));
 };
 
 export const deleteBookByKey = (hostname, bookTitle) => {
