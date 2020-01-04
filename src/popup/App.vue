@@ -2,7 +2,7 @@
   <b-card class="wrapperCard" title="Last Viewed Book" v-bind:sub-title="hostname">
     <template v-if="book !== null">
       <data-pair-view header="Book title" v-bind:data="book.title" />
-      <data-pair-view header="Current chapter" v-bind:data="book.currentChapter" />
+      <data-pair-view header="Current chapter" v-bind:data="book.currentChapter.number" />
       <data-pair-view header="Last 5 chapters" v-bind:data="book.chapters" />
     </template>
     <h5 v-else>No book found</h5>
@@ -32,7 +32,7 @@ export default {
               if (book !== null) {
                 this.book = {
                   ...book,
-                  chapters: book.chapters.slice(-5)
+                  chapters: book.chapters.map(ch => ch.number).slice(-5)
                 };
               }
             }

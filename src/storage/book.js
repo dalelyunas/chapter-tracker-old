@@ -2,17 +2,19 @@ import { localStorage } from './chrome';
 
 const BOOK_KEY_PREFIX = 'book';
 
-const insertIntoSortedNumberArray = (arr, val) => {
+const insertIntoSortedChapterArray = (arr, chapter) => {
+    console.log(chapter);
     const resultArr = new Array(arr.length + 1);
-    resultArr[0] = val;
+    resultArr[0] = chapter;
     let arrIndex = 0;
     for (let i = 1; i < resultArr.length; i += 1) {
         resultArr[i] = arr[arrIndex];
         arrIndex += 1;
-        if (resultArr[i] === resultArr[i - 1]) {
+        if (resultArr[i].number === resultArr[i - 1].number) {
+            // TODO noop this somehow and resolve updatedAt
             return arr;
         }
-        if (resultArr[i] < resultArr[i - 1]) {
+        if (resultArr[i].number < resultArr[i - 1].number) {
             const tmp = resultArr[i];
             resultArr[i] = resultArr[i - 1];
             resultArr[i - 1] = tmp;
@@ -25,23 +27,33 @@ const getBookKey = (hostname, bookTitle) => {
     return BOOK_KEY_PREFIX + ':' + hostname + ':' + bookTitle;
 };
 
+export class Chapter {
+    constructor(number, updatedAt) {
+        this.number = number;
+        this.updatedAt = updatedAt;
+    }
+}
+
 export class Book {
-    constructor(hostname, title, chapters, currentChapter) {
+    constructor(hostname, title, chapters, currentChapter, updatedAt) {
         this.hostname = hostname;
         this.title = title;
         this.chapters = chapters;
         this.currentChapter = currentChapter;
+        this.updatedAt = updatedAt;
     }
-    addChapter(chapterNum) {
-        this.chapters = insertIntoSortedNumberArray(this.chapters, chapterNum);
-        this.currentChapter = chapterNum
+    addChapter(chapter) {
+        this.chapters = insertIntoSortedChapterArray(this.chapters, chapter);
+        this.currentChapter = chapter
+        this.updatedAt = chapter.updatedAt
     }
     isValid() {
         return typeof this.title === 'string' &&
             typeof this.hostname === 'string' &&
             Array.isArray(this.chapters) &&
-            typeof this.currentChapter === 'number' &&
-            !isNaN(this.currentChapter);
+            typeof this.currentChapter === 'object' &&
+            typeof this.updatedAt === 'number' &&
+            !isNaN(this.updatedAt);
     }
     getKey() {
         return getBookKey(this.hostname, this.title);
@@ -52,7 +64,9 @@ const objLiteralToBook = obj => {
     if (obj === null) {
         return null;
     }
-    return new Book(obj.hostname, obj.title, obj.chapters, obj.currentChapter);
+    const chapters = obj.chapters.map(ch => new Chapter(ch.number, ch.updatedAt));
+    const currentChapter = new Chapter(obj.currentChapter.number, obj.currentChapter.updatedAt);
+    return new Book(obj.hostname, obj.title, chapters, currentChapter);
 };
 
 export const getBookByKey = async (hostname, bookTitle) => {
@@ -60,6 +74,7 @@ export const getBookByKey = async (hostname, bookTitle) => {
 };
 
 export const saveBook = book => {
+    console.log(book);
     if (book.isValid()) {
         return localStorage.set(book.getKey(), book);
     } else {

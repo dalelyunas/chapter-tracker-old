@@ -1,5 +1,5 @@
 import { getPageParserByKey } from './storage/page-parser';
-import { Book, saveBook, getBookByKey } from './storage/book';
+import { Book, saveBook, getBookByKey, Chapter } from './storage/book';
 import { LastViewedBook, saveLastViewedBook } from './storage/last-viewed-book';
 
 const IGNORE_PARSE_RESULT_VALUE = 'ignore_parse_result';
@@ -37,9 +37,11 @@ const sendErrorNotification = parseResult => {
     sendNotification('Error: ', parseResult.hostname, parseResult.error);
 };
 
+const getNow = () => new Date().getTime();
+
 export const storeSeenChapter = async (hostname, bookTitle, chapterNum) => {
-    const book = await getBookByKey(hostname, bookTitle) || new Book(hostname, bookTitle, [], null);
-    book.addChapter(chapterNum);
+    const book = await getBookByKey(hostname, bookTitle) || new Book(hostname, bookTitle, [], null, getNow());
+    book.addChapter(new Chapter(chapterNum, getNow()));
     return saveBook(book);
 };
 
