@@ -32,6 +32,12 @@ export class Chapter {
         this.number = number;
         this.updatedAt = updatedAt;
     }
+    isValid() {
+        return typeof this.number === 'number' &&
+            typeof this.updatedAt === 'number' &&
+            !isNaN(this.number) &&
+            !isNaN(this.updatedAt);
+    }
 }
 
 export class Book {
@@ -43,6 +49,9 @@ export class Book {
         this.updatedAt = updatedAt;
     }
     addChapter(chapter) {
+        if (!chapter.isValid()) {
+            return;
+        }
         this.chapters = insertIntoSortedChapterArray(this.chapters, chapter);
         this.currentChapter = chapter
         this.updatedAt = chapter.updatedAt
