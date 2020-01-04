@@ -3,6 +3,7 @@
     <data-pair-view header="Book title" v-bind:data="bookTitle" />
     <data-pair-view header="Current chapter" v-bind:data="currentChapter" />
     <data-pair-view header="Last 5 chapters" v-bind:data="chapters" />
+    <b-link v-on:click="goToOptionsPage">Options</b-link>
   </b-card>
 </template>
 
@@ -34,6 +35,9 @@ export default {
           }
         );
       });
+    },
+    goToOptionsPage() {
+      chrome.runtime.openOptionsPage();
     }
   }
 };
