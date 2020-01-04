@@ -1,8 +1,11 @@
 <template>
   <b-card class="wrapperCard" title="Last Viewed Book" v-bind:sub-title="hostname">
-    <data-pair-view header="Book title" v-bind:data="bookTitle" />
-    <data-pair-view header="Current chapter" v-bind:data="currentChapter" />
-    <data-pair-view header="Last 5 chapters" v-bind:data="chapters" />
+    <template v-if="book !== null">
+      <data-pair-view header="Book title" v-bind:data="book.title" />
+      <data-pair-view header="Current chapter" v-bind:data="book.currentChapter" />
+      <data-pair-view header="Last 5 chapters" v-bind:data="book.chapters" />
+    </template>
+    <h5 v-else>No book found</h5>
     <b-link v-on:click="goToOptionsPage">Options</b-link>
   </b-card>
 </template>
@@ -14,10 +17,7 @@ import { getBookByKey } from "../storage/book";
 export default {
   data() {
     return {
-      currentChapter: undefined,
-      chapters: [],
-      bookTitle: undefined,
-      hostname: undefined
+      book: null
     };
   },
   created() {
@@ -26,14 +26,18 @@ export default {
   methods: {
     getLastViewedBookData() {
       getLastViewedBook().then(lastViewedBook => {
-        getBookByKey(lastViewedBook.hostname, lastViewedBook.title).then(
-          book => {
-            this.chapters = book.chapters.slice(-5);
-            this.currentChapter = book.currentChapter;
-            this.bookTitle = book.title;
-            this.hostname = book.hostname;
-          }
-        );
+        if (lastViewedBook !== null) {
+          getBookByKey(lastViewedBook.hostname, lastViewedBook.title).then(
+            book => {
+              if (book !== null) {
+                this.book = {
+                  ...book,
+                  chapters: book.chapters.slice(-5)
+                };
+              }
+            }
+          );
+        }
       });
     },
     goToOptionsPage() {
