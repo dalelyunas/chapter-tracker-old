@@ -3,24 +3,22 @@ import { localStorage } from './chrome';
 const BOOK_KEY_PREFIX = 'book';
 
 const insertIntoSortedChapterArray = (arr, chapter) => {
-    console.log(chapter);
-    const resultArr = new Array(arr.length + 1);
-    resultArr[0] = chapter;
-    let arrIndex = 0;
-    for (let i = 1; i < resultArr.length; i += 1) {
-        resultArr[i] = arr[arrIndex];
-        arrIndex += 1;
-        if (resultArr[i].number === resultArr[i - 1].number) {
-            // TODO noop this somehow and resolve updatedAt
-            return arr;
-        }
-        if (resultArr[i].number < resultArr[i - 1].number) {
-            const tmp = resultArr[i];
-            resultArr[i] = resultArr[i - 1];
-            resultArr[i - 1] = tmp;
+    const arrCopy = [...arr];
+    for (let i = 0; i < arrCopy.length; i += 1) {
+        if (arrCopy[i].number === chapter.number) {
+            arrCopy[i].updatedAt = chapter.updatedAt;
+            return arrCopy;
         }
     }
-    return resultArr;
+    arrCopy.push(chapter);
+    for (let i = arrCopy.length - 1; i > 0; i -= 1) {
+        if (arrCopy[i].number < arrCopy[i - 1].number) {
+            const tmp = arrCopy[i];
+            arrCopy[i] = arrCopy[i - 1];
+            arrCopy[i - 1] = tmp;
+        }
+    }
+    return arrCopy;
 };
 
 const getBookKey = (hostname, bookTitle) => {
@@ -83,7 +81,6 @@ export const getBookByKey = async (hostname, bookTitle) => {
 };
 
 export const saveBook = book => {
-    console.log(book);
     if (book.isValid()) {
         return localStorage.set(book.getKey(), book);
     } else {
