@@ -1,6 +1,7 @@
 import { getPageParserByKey } from './storage/page-parser';
 import { Book, saveBook, getBookByKey, Chapter } from './storage/book';
 import { LastViewedBook, saveLastViewedBook } from './storage/last-viewed-book';
+import { SEND_PAGE_PARSER_TYPE, PAGE_PARSER_RESULT_TYPE, ERROR_MESSAGE_TYPE, Message } from './message';
 
 const IGNORE_PARSE_RESULT_VALUE = 'ignore_parse_result';
 
@@ -8,11 +9,9 @@ const getHostnameUnsafe = url => {
     return new URL(url).hostname;
 };
 
-const isErrorResult = result => result !== undefined && result.error !== undefined;
-
-const isIgnoreResult = result => result !== undefined &&
-    (result.chapterNumber === IGNORE_PARSE_RESULT_VALUE ||
-        result.bookTitle === IGNORE_PARSE_RESULT_VALUE);
+const isIgnoreResult = data => data !== undefined &&
+    (data.chapterNumber === IGNORE_PARSE_RESULT_VALUE ||
+        daata.bookTitle === IGNORE_PARSE_RESULT_VALUE);
 
 const sendNotification = (title, hostname, message) => {
     chrome.notifications.clear('parse_failed', () => {
@@ -33,8 +32,8 @@ const sendInvalidDataNotification = parseResult => {
     );
 };
 
-const sendErrorNotification = parseResult => {
-    sendNotification('Error: ', parseResult.hostname, parseResult.error);
+const sendErrorNotification = data => {
+    sendNotification('Error: ', data.hostname, data.error);
 };
 
 const getNow = () => new Date().getTime();
@@ -45,10 +44,11 @@ export const storeSeenChapter = async (hostname, bookTitle, chapterNum) => {
     return saveBook(book);
 };
 
-const handleParseResult = parseResult => {
-    if (isErrorResult(parseResult)) {
-        sendErrorNotification(parseResult);
-    } else if (!isIgnoreResult(parseResult)) {
+const handleResponseMessage = message => {
+    if (message.type === ERROR_MESSAGE_TYPE) {
+        sendErrorNotification(message.data);
+    } else if (message.type === PAGE_PARSER_RESULT_TYPE && !isIgnoreResult(message.data)) {
+        const parseResult = message.data;
         storeSeenChapter(parseResult.hostname, parseResult.bookTitle, parseResult.chapterNumber)
             .then(() => saveLastViewedBook(new LastViewedBook(parseResult.hostname, parseResult.bookTitle)))
             .catch(() => sendInvalidDataNotification(parseResult));
@@ -56,12 +56,9 @@ const handleParseResult = parseResult => {
 };
 
 const sendPageParser = (pageParser, tabId) => {
-    const payload = {
-        type: 'apply_parser',
-        pageParser
-    };
-    chrome.tabs.sendMessage(tabId, payload, parseResult => {
-        handleParseResult(parseResult);
+    const payload = new Message(SEND_PAGE_PARSER_TYPE, pageParser);
+    chrome.tabs.sendMessage(tabId, payload, response => {
+        handleResponseMessage(response);
     });
 };
 

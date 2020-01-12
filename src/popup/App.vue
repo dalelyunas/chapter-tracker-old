@@ -1,5 +1,5 @@
 <template>
-  <b-card class="wrapperCard" title="Last Viewed Book" v-bind:sub-title="hostname">
+  <b-card class="wrapperCard" title="Last Viewed Book" v-bind:sub-title="book.hostname">
     <template v-if="book !== null">
       <data-pair-view header="Book title" v-bind:data="book.title" />
       <data-pair-view header="Current chapter" v-bind:data="book.currentChapter.number" />

@@ -1,3 +1,5 @@
+import { SEND_PAGE_PARSER_TYPE, PAGE_PARSER_RESULT_TYPE, ERROR_MESSAGE_TYPE, Message } from './message';
+
 const applyParserBody = parserBodyString => {
   if (parserBodyString === undefined || parserBodyString === null) {
     return null;
@@ -8,22 +10,22 @@ const applyParserBody = parserBodyString => {
 
 const getParseResult = pageParser => {
   try {
-    return {
+    return new Message(PAGE_PARSER_RESULT_TYPE, {
       bookTitle: applyParserBody(pageParser.bookTitleParser),
       chapterNumber: applyParserBody(pageParser.chapterNumberParser),
       hostname: window.location.hostname
-    };
+    });
   } catch (e) {
-    return {
+    return new Message(ERROR_MESSAGE_TYPE, {
       error: e.message,
       hostname: window.location.hostname
-    };
+    });
   }
 };
 
 chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
   chrome.runtime.onMessage.removeListener();
-  if (request.type == 'apply_parser') {
-    sendResponse(getParseResult(request.pageParser))
+  if (request.type === SEND_PAGE_PARSER_TYPE) {
+    sendResponse(getParseResult(request.data))
   }
 });

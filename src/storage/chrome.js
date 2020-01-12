@@ -12,7 +12,7 @@ class Storage {
   }
 
   set(key, value) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       this.type.set({ [key]: value }, (result) => {
         resolve(result);
       });
