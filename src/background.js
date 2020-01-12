@@ -11,7 +11,7 @@ const getHostnameUnsafe = url => {
 
 const isIgnoreResult = data => data !== undefined &&
     (data.chapterNumber === IGNORE_PARSE_RESULT_VALUE ||
-        daata.bookTitle === IGNORE_PARSE_RESULT_VALUE);
+        data.bookTitle === IGNORE_PARSE_RESULT_VALUE);
 
 const sendNotification = (title, hostname, message) => {
     chrome.notifications.clear('parse_failed', () => {
