@@ -1,4 +1,4 @@
-import { localStorage } from './chrome';
+import { localStorage } from './chrome-storage';
 
 const LAST_VIEWED_BOOK_KEY = "last_viewed_book";
 

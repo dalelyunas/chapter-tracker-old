@@ -1,7 +1,9 @@
 import { getPageParserByKey } from './storage/page-parser';
 import { Book, saveBook, getBookByKey, Chapter } from './storage/book';
 import { LastViewedBook, saveLastViewedBook } from './storage/last-viewed-book';
-import { SEND_PAGE_PARSER_TYPE, PAGE_PARSER_RESULT_TYPE, ERROR_MESSAGE_TYPE, Message } from './message';
+import { SEND_PAGE_PARSER_TYPE, PAGE_PARSER_RESULT_TYPE, ERROR_MESSAGE_TYPE, SYNC_BOOKS, Message } from './message';
+import { getCurrentTime } from './util';
+import { googleDriveAppData } from './storage/sync/google-drive';
 
 const IGNORE_PARSE_RESULT_VALUE = 'ignore_parse_result';
 
@@ -36,11 +38,10 @@ const sendErrorNotification = data => {
     sendNotification('Error: ', data.hostname, data.error);
 };
 
-const getNow = () => new Date().getTime();
-
 export const storeSeenChapter = async (hostname, bookTitle, chapterNum) => {
-    const book = await getBookByKey(hostname, bookTitle) || new Book(hostname, bookTitle, [], null, getNow());
-    book.addChapter(new Chapter(chapterNum, getNow()));
+    const currentTime = getCurrentTime();
+    const book = await getBookByKey(hostname, bookTitle) || new Book(hostname, bookTitle, [], null, currentTime);
+    book.addChapter(new Chapter(chapterNum, currentTime));
     return saveBook(book);
 };
 
@@ -71,5 +72,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                 });
             }
         });
+    }
+});
+const blah = "book.json" + '{ "a": "b"}';
+chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
+    if (message.type === SYNC_BOOKS) {
+        googleDriveAppData.getJsonFile('1tkSpr13RDnyuMcuIlxwdAC7yAIudmcdqdx3gReCF8RLBlTQusA')
+            .then(data => console.log(data))
+            .catch(() => console.log('error'));
     }
 });

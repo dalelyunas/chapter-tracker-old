@@ -1,4 +1,4 @@
-import { syncStorage } from './chrome';
+import { syncStorage } from './chrome-storage';
 
 const PAGE_PARSER_KEY_PREFIX = 'page_parser';
 

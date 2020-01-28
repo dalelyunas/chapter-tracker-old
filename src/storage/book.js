@@ -1,12 +1,14 @@
-import { localStorage } from './chrome';
+import { localStorage } from './chrome-storage';
+import { Tombstone, saveTombstone } from './tombstone';
+import { getCurrentTime } from '../util';
 
 const BOOK_KEY_PREFIX = 'book';
 
-const insertIntoSortedChapterArray = (arr, chapter) => {
+export const insertIntoSortedChapterArray = (arr, chapter) => {
     const arrCopy = [...arr];
     for (let i = 0; i < arrCopy.length; i += 1) {
         if (arrCopy[i].number === chapter.number) {
-            arrCopy[i].updatedAt = chapter.updatedAt;
+            arrCopy[i].updatedAt = Math.max(chapter.updatedAt, arrCopy[i].updatedAt);
             return arrCopy;
         }
     }
@@ -52,7 +54,7 @@ export class Book {
         }
         this.chapters = insertIntoSortedChapterArray(this.chapters, chapter);
         this.currentChapter = chapter
-        this.updatedAt = chapter.updatedAt
+        this.updatedAt = Math.max(chapter.updatedAt, this.updatedAt);
     }
     isValid() {
         return typeof this.title === 'string' &&
@@ -67,13 +69,13 @@ export class Book {
     }
 }
 
-const objLiteralToBook = obj => {
+export const objLiteralToBook = obj => {
     if (obj === null) {
         return null;
     }
     const chapters = obj.chapters.map(ch => new Chapter(ch.number, ch.updatedAt));
     const currentChapter = new Chapter(obj.currentChapter.number, obj.currentChapter.updatedAt);
-    return new Book(obj.hostname, obj.title, chapters, currentChapter);
+    return new Book(obj.hostname, obj.title, chapters, currentChapter, obj.updatedAt);
 };
 
 export const getBookByKey = async (hostname, bookTitle) => {
@@ -94,6 +96,8 @@ export const getAllBooks = async () => {
     return objs.map(obj => objLiteralToBook(obj));
 };
 
-export const deleteBookByKey = (hostname, bookTitle) => {
-    return localStorage.delete(getBookKey(hostname, bookTitle));
+export const deleteBookByKey = async (hostname, bookTitle) => {
+    const bookKey = getBookKey(hostname, bookTitle);
+    await saveTombstone(new Tombstone(bookKey, getCurrentTime()))
+    return localStorage.delete(bookKey);
 };

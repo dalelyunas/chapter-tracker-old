@@ -1,30 +1,38 @@
 <template>
-  <b-card class="wrapperCard" title="Last Viewed Book" v-bind:sub-title="book.hostname">
+  <b-card
+    class="wrapperCard"
+    title="Last Viewed Book"
+    v-bind:sub-title="book !== null ? book.hostname : null"
+  >
     <template v-if="book !== null">
       <data-pair-view header="Book title" v-bind:data="book.title" />
       <data-pair-view header="Current chapter" v-bind:data="book.currentChapter.number" />
       <data-pair-view header="Last 5 chapters" v-bind:data="book.chapters" />
     </template>
     <h5 v-else>No book found</h5>
+
     <b-link v-on:click="goToOptionsPage">Options</b-link>
+    <b-button v-on:click="syncBooks">Sync books</b-button>
   </b-card>
 </template>
 
 <script>
 import { getLastViewedBook } from "../storage/last-viewed-book";
 import { getBookByKey } from "../storage/book";
+import { SYNC_BOOKS, Message } from "../message";
 
 export default {
   data() {
     return {
-      book: null
+      book: null,
+      syncingBooks: false
     };
   },
   created() {
-    this.getLastViewedBookData();
+    this.refreshLastViewedBook();
   },
   methods: {
-    getLastViewedBookData() {
+    refreshLastViewedBook() {
       getLastViewedBook().then(lastViewedBook => {
         if (lastViewedBook !== null) {
           getBookByKey(lastViewedBook.hostname, lastViewedBook.title).then(
@@ -42,6 +50,11 @@ export default {
     },
     goToOptionsPage() {
       chrome.runtime.openOptionsPage();
+    },
+    syncBooks() {
+      chrome.runtime.sendMessage(new Message(SYNC_BOOKS, {}), response => {
+        // Nothing
+      });
     }
   }
 };

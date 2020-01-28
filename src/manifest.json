@@ -1,5 +1,5 @@
 {
-  "name": "chapter-tracker",
+  "name": "Chapter Tracker",
   "description": "Tracks chapters as you read them",
   "version": 1.0,
   "manifest_version": 2,
@@ -8,13 +8,12 @@
     "128": "icons/icon_128.png"
   },
   "browser_action": {
-    "default_title": "chapter-tracker",
+    "default_title": "Chapter Tracker",
     "default_popup": "popup/popup.html"
   },
   "background": {
-    "scripts": [
-      "background.js"
-    ]
+    "persistent": false,
+    "page": "background.html"
   },
   "options_ui": {
     "page": "options/options.html",
@@ -26,6 +25,15 @@
     "https://*/*",
     "http://*/*",
     "unlimitedStorage",
-    "notifications"
-  ]
+    "notifications",
+    "identity"
+  ],
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxH98TPe+lRHEgjasaaetzUQzvVBkUXkguJd1FoYLPRy8psp8UXbwy9sfHQMdY9bTWkEhNLVUvTFbAzEjQd3MxjgLFtIypGL3tDQRc35kLx/VrcwRa6903dPN+IOyo3W6llSNkBvUCr12co5jUtNUMMo2B4g4WLvbFfjPE/q7MAQPRrATjVV3apUb7ngzhUzARWb6Q0LM9N7k/h03ra9joL6VEW7/d5daINZHYhwwdv/h364Y5BAmYl8z5F9H2KwdFspPbG5nggFl5KADdAQrmsz1Xc9OtTnMqdV4VG62EXMkSVzMFnpAIQU3vARSKORbf7VhtL3U+LTZXVblSceBGQIDAQAB",
+  "oauth2": {
+    "client_id": "659459061373-04qr2epbc9ipq744nkjsg3i4hc2hh96j.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.appdata"
+    ]
+  },
+  "content_security_policy": "script-src 'self' https://apis.google.com; object-src 'self'"
 }
