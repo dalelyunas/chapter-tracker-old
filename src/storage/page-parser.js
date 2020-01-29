@@ -29,12 +29,12 @@ const objLiteralToPageParser = obj => {
     return new PageParser(obj.hostname, obj.bookTitleParser, obj.chapterNumberParser);
 };
 
-export const getAllPageParsers = async () => {
+export const listPageParsers = async () => {
     const objs = await syncStorage.getAll(PAGE_PARSER_KEY_PREFIX);
     return objs.map(obj => objLiteralToPageParser(obj));
 };
 
-export const getPageParserByKey = async hostname => {
+export const getPageParser = async hostname => {
     return objLiteralToPageParser(await syncStorage.get(getPageParserKey(hostname)));
 };
 
@@ -47,6 +47,6 @@ export const savePageParser = pageParser => {
     }
 };
 
-export const deletePageParserByKey = hostname => {
+export const deletePageParser = hostname => {
     return syncStorage.delete(getPageParserKey(hostname));
 };

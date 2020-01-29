@@ -18,9 +18,9 @@
 <script>
 import {
   PageParser,
-  getAllPageParsers,
+  listPageParsers,
   savePageParser,
-  deletePageParserByKey
+  deletePageParser
 } from "../../storage/page-parser";
 
 export default {
@@ -45,10 +45,10 @@ export default {
       ).then(() => this.refreshParsers());
     },
     deleteParser(parser) {
-      deletePageParserByKey(parser.hostname).then(() => this.refreshParsers());
+      deletePageParser(parser.hostname).then(() => this.refreshParsers());
     },
     refreshParsers() {
-      getAllPageParsers().then(parsers => {
+      listPageParsers().then(parsers => {
         this.parsers = parsers;
         this.newParser = {};
       });

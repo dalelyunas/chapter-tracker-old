@@ -7,14 +7,14 @@
         v-bind:key="group.hostname"
         v-bind:hostname="group.hostname"
         v-bind:books="group.books"
-        @deleteBook="deleteBook"
+        @deleteBook="handleDeleteBook"
       />
     </div>
   </div>
 </template>
 
 <script>
-import { getAllBooks, deleteBookByKey } from "../../storage/book";
+import { listNotDeletedBooks, deleteBook } from "../../storage/book";
 
 export default {
   name: "BookTab",
@@ -27,13 +27,13 @@ export default {
     this.refreshBookGroups();
   },
   methods: {
-    deleteBook(book) {
-      deleteBookByKey(book.hostname, book.title).then(() =>
+    handleDeleteBook(book) {
+      deleteBook(book.hostname, book.title).then(() =>
         this.refreshBookGroups()
       );
     },
     refreshBookGroups() {
-      getAllBooks().then(books => {
+      listNotDeletedBooks().then(books => {
         const reducer = (groups, book) => {
           if (book.hostname in groups) {
             groups[book.hostname].books.push(book);

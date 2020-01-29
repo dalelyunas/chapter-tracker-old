@@ -1,5 +1,5 @@
-import { getPageParserByKey } from './storage/page-parser';
-import { Book, saveBook, getBookByKey, Chapter } from './storage/book';
+import { getPageParser } from './storage/page-parser';
+import { Book, saveBook, getBook, Chapter } from './storage/book';
 import { LastViewedBook, saveLastViewedBook } from './storage/last-viewed-book';
 import { SEND_PAGE_PARSER_TYPE, PAGE_PARSER_RESULT_TYPE, ERROR_MESSAGE_TYPE, SYNC_BOOKS, Message } from './message';
 import { getCurrentTime } from './util';
@@ -40,7 +40,9 @@ const sendErrorNotification = data => {
 
 export const storeSeenChapter = async (hostname, bookTitle, chapterNum) => {
     const currentTime = getCurrentTime();
-    const book = await getBookByKey(hostname, bookTitle) || new Book(hostname, bookTitle, [], null, currentTime);
+    console.log('pre book')
+    const book = await getBook(hostname, bookTitle) || new Book(hostname, bookTitle, [], null, currentTime, null);
+    console.log(book);
     book.addChapter(new Chapter(chapterNum, currentTime));
     return saveBook(book);
 };
@@ -65,7 +67,7 @@ const sendPageParser = (pageParser, tabId) => {
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (tab.active && changeInfo.url) {
-        getPageParserByKey(getHostnameUnsafe(changeInfo.url)).then(pageParser => {
+        getPageParser(getHostnameUnsafe(changeInfo.url)).then(pageParser => {
             if (pageParser !== null) {
                 chrome.tabs.executeScript(tabId, { file: 'content-script.js' }, () => {
                     sendPageParser(pageParser, tabId);

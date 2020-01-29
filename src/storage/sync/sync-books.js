@@ -1,5 +1,4 @@
-import { Book, insertIntoSortedChapterArray, getAllBooks, saveBook } from "../book";
-import { Tombstone, getAllTombstones, getTombstoneKey, saveTombstone } from "../tombstone";
+import { Book, insertIntoSortedChapterArray, listBooks, saveBook } from "../book";
 
 const mergeBook = (local, remote) => {
     const combinedChapters = [];
@@ -15,10 +14,6 @@ const mergeBook = (local, remote) => {
     return new Book(remote.hostname, remote.title, combinedChapters, currentChapter, updatedAt);
 };
 
-const mergeTombstone = (local, remote) => {
-    return new Tombstone(local.deletedKey, Math.max(local.updatedAt, remote.updatedAt));
-};
-
 const mergeObjects = (local, remote, mergeFunc) => {
     const combined = { ...local };
     for (let key of Object.keys(remote)) {
@@ -32,36 +27,13 @@ const mergeObjects = (local, remote, mergeFunc) => {
     return combined;
 };
 
-const applyTombstones = (books, tombstones) => {
-    const appliedTombstones = {};
-    const keptBooks = {};
-    for (let [bookKey, book] of Object.entries(books)) {
-        const tombstone = tombstones[getTombstoneKey(bookKey)]
-        if (tombstone !== undefined && tombstone.updatedAt > book.updatedAt) {
-            appliedTombstones[tombstoneKey] = tombstone;
-        } else {
-            keptBooks[bookKey] = book;
-        }
-    }
-
-    return {
-        keptBooks,
-        appliedTombstones
-    }
-};
-
 const performBookSync = async () => {
     // Get from drive
 
     // Merge items
     const books = mergeObjects(await getAllBooks(), {}, mergeBook);
-    const tombstones = mergeObjects(await getAllTombstones(), {}, mergeTombstone);
-
-    const { keptBooks, appliedTombstones } = applyTombstones(books, tombstones);
 
     // Save to local storage
-    Object.values(keptBooks).forEach(book => saveBook(book));
-    Object.values(appliedTombstones).forEach(tombstone => saveTombstone(tombstone));
 
     // Save to drive
 };
