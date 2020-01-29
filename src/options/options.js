@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import App from './App';
 import {
   BButton,
   BCard,
@@ -13,14 +12,16 @@ import {
 } from 'bootstrap-vue';
 import VueHighlightJS from 'vue-highlightjs';
 
-import ParserView from './page-parser/ParserView';
-import AddParserForm from './page-parser/AddParserForm';
-import PageParserTab from './page-parser/PageParserTab';
-import ParserInstructions from './page-parser/ParserInstructions';
+import App from './App.vue';
 
-import BookTab from './book/BookTab';
-import BookViewGroup from './book/BookViewGroup';
-import BookView from './book/BookView';
+import ParserView from './page-parser/ParserView.vue';
+import AddParserForm from './page-parser/AddParserForm.vue';
+import PageParserTab from './page-parser/PageParserTab.vue';
+import ParserInstructions from './page-parser/ParserInstructions.vue';
+
+import BookTab from './book/BookTab.vue';
+import BookViewGroup from './book/BookViewGroup.vue';
+import BookView from './book/BookView.vue';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'highlight.js/styles/github.css';
@@ -50,5 +51,5 @@ Vue.use(VueHighlightJS);
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  render: h => h(App)
+  render: (h) => h(App)
 });

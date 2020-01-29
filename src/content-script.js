@@ -5,15 +5,16 @@ import {
   Message
 } from './message';
 
-const applyParserBody = parserBodyString => {
+const applyParserBody = (parserBodyString) => {
   if (parserBodyString === undefined || parserBodyString === null) {
     return null;
   }
 
+  // eslint-disable-next-line no-new-func
   return Function('pathname', 'document', parserBodyString)(window.location.pathname, document);
 };
 
-const getParseResult = pageParser => {
+const getParseResult = (pageParser) => {
   try {
     return new Message(PAGE_PARSER_RESULT_TYPE, {
       bookTitle: applyParserBody(pageParser.bookTitleParser),

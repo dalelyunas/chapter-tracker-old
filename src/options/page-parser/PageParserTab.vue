@@ -16,12 +16,8 @@
 </template>
 
 <script>
-import {
-  PageParser,
-  listPageParsers,
-  savePageParser,
-  deletePageParser
-} from '../../storage/page-parser';
+import { PageParser } from '../../api/model/PageParser';
+import { listPageParsers, savePageParser, deletePageParser } from '../../api/page-parser-api';
 
 export default {
   name: 'PageParserTab',
@@ -44,7 +40,7 @@ export default {
       deletePageParser(parser.hostname).then(() => this.refreshParsers());
     },
     refreshParsers() {
-      listPageParsers().then(parsers => {
+      listPageParsers().then((parsers) => {
         this.parsers = parsers;
         this.newParser = {};
       });

@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import { getLastViewedBook } from '../storage/last-viewed-book';
-import { getBookNotDeleted } from '../storage/book';
+import { getLastViewedBook } from '../api/last-viewed-book-api';
+import { getBookNotDeleted } from '../api/book-api';
 import { SYNC_BOOKS, Message } from '../message';
 
 export default {
@@ -33,13 +33,13 @@ export default {
   },
   methods: {
     refreshLastViewedBook() {
-      getLastViewedBook().then(lastViewedBook => {
+      getLastViewedBook().then((lastViewedBook) => {
         if (lastViewedBook !== null) {
-          getBookNotDeleted(lastViewedBook.hostname, lastViewedBook.title).then(book => {
+          getBookNotDeleted(lastViewedBook.hostname, lastViewedBook.title).then((book) => {
             if (book !== null) {
               this.book = {
                 ...book,
-                chapters: book.chapters.map(ch => ch.number).slice(-5)
+                chapters: book.chapters.map((ch) => ch.number).slice(-5)
               };
             }
           });
@@ -50,7 +50,7 @@ export default {
       chrome.runtime.openOptionsPage();
     },
     syncBooks() {
-      chrome.runtime.sendMessage(new Message(SYNC_BOOKS, {}), response => {
+      chrome.runtime.sendMessage(new Message(SYNC_BOOKS, {}), (response) => {
         // Nothing
       });
     }

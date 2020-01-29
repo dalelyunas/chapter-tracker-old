@@ -1,4 +1,4 @@
-import { GOOGLE_DRIVE_API_KEY } from '../keys';
+import { GOOGLE_DRIVE_API_KEY } from '../../keys';
 
 const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
 const API_ROOT = 'https://www.googleapis.com/upload/drive/v3/files';
@@ -15,7 +15,7 @@ export class GoogleDriveAppData {
         {
           interactive: true
         },
-        token => {
+        (token) => {
           if (chrome.runtime.lastError) {
             reject();
           } else {
@@ -58,10 +58,11 @@ export class GoogleDriveAppData {
     let result = [];
     const initialResp = await gapi.client.drive.files.list({ spaces: APP_DATA_FOLDER });
     result = result.concat(initialResp.result.files);
-    let nextPageToken = initialResp.result.nextPageToken;
+    let { nextPageToken } = initialResp.result;
 
     while (nextPageToken) {
-      let resp = await gapi.client.drive.files.list({
+      // eslint-disable-next-line no-await-in-loop
+      const resp = await gapi.client.drive.files.list({
         pageToken: nextPageToken,
         spaces: APP_DATA_FOLDER
       });
@@ -74,7 +75,7 @@ export class GoogleDriveAppData {
 
   async deleteFile(fileId) {
     await this.authenticateGapi();
-    return await gapi.client.drive.files.delete({ fileId });
+    return gapi.client.drive.files.delete({ fileId });
   }
 
   async updateFile(fileId, fileType, dataString) {
@@ -83,11 +84,10 @@ export class GoogleDriveAppData {
       const file = new Blob([dataString], { type: fileType });
 
       const xhr = new XMLHttpRequest();
-      xhr.open('patch', API_ROOT + '/' + fileId + '?uploadType=media');
-      xhr.setRequestHeader('Authorization', 'Bearer ' + gapi.auth.getToken().access_token);
+      xhr.open('patch', `${API_ROOT}/${fileId}?uploadType=media`);
+      xhr.setRequestHeader('Authorization', `Bearer ${gapi.auth.getToken().access_token}`);
       xhr.responseType = 'json';
       xhr.onload = () => {
-        console.log(xhr.response);
         resolve(xhr.response);
       };
       xhr.onerror = () => {
@@ -112,8 +112,8 @@ export class GoogleDriveAppData {
       form.append('file', file);
 
       const xhr = new XMLHttpRequest();
-      xhr.open('post', API_ROOT + '?uploadType=multipart&fields=id');
-      xhr.setRequestHeader('Authorization', 'Bearer ' + gapi.auth.getToken().access_token);
+      xhr.open('post', `${API_ROOT}?uploadType=multipart&fields=id`);
+      xhr.setRequestHeader('Authorization', `Bearer ${gapi.auth.getToken().access_token}`);
       xhr.responseType = 'json';
       xhr.onload = () => {
         resolve(xhr.response);
@@ -126,4 +126,4 @@ export class GoogleDriveAppData {
   }
 }
 
-export let googleDriveAppData = new GoogleDriveAppData();
+export const googleDriveAppData = new GoogleDriveAppData();
