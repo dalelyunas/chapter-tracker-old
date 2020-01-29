@@ -1,13 +1,13 @@
 <template>
   <div class="dataPair">
-    <h5>{{header}}</h5>
-    <p>{{data}}</p>
+    <h5>{{ header }}</h5>
+    <p>{{ data }}</p>
   </div>
 </template>
 
 <script>
 export default {
-  name: "DataPairView",
+  name: 'DataPairView',
   props: {
     header: { type: String },
     data: { type: [String, Number, Array] }

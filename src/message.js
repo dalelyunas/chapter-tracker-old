@@ -4,8 +4,8 @@ export const PAGE_PARSER_RESULT_TYPE = 'page_parser_result';
 export const SYNC_BOOKS = 'sync_books';
 
 export class Message {
-    constructor(type, data) {
-        this.type = type;
-        this.data = data;
-    }
+  constructor(type, data) {
+    this.type = type;
+    this.data = data;
+  }
 }

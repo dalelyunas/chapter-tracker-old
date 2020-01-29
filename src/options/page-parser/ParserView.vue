@@ -14,13 +14,13 @@
 
 <script>
 export default {
-  name: "ParserView",
+  name: 'ParserView',
   props: {
     parser: { type: Object }
   },
   methods: {
     deleteParser() {
-      this.$emit("deleteParser", this.parser);
+      this.$emit('deleteParser', this.parser);
     }
   }
 };

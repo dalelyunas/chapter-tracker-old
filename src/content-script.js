@@ -1,4 +1,9 @@
-import { SEND_PAGE_PARSER_TYPE, PAGE_PARSER_RESULT_TYPE, ERROR_MESSAGE_TYPE, Message } from './message';
+import {
+  SEND_PAGE_PARSER_TYPE,
+  PAGE_PARSER_RESULT_TYPE,
+  ERROR_MESSAGE_TYPE,
+  Message
+} from './message';
 
 const applyParserBody = parserBodyString => {
   if (parserBodyString === undefined || parserBodyString === null) {
@@ -26,6 +31,6 @@ const getParseResult = pageParser => {
 chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
   chrome.runtime.onMessage.removeListener();
   if (request.type === SEND_PAGE_PARSER_TYPE) {
-    sendResponse(getParseResult(request.data))
+    sendResponse(getParseResult(request.data));
   }
 });

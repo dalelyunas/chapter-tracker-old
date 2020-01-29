@@ -13,7 +13,7 @@ class Storage {
 
   set(key, value) {
     return new Promise(resolve => {
-      this.type.set({ [key]: value }, (result) => {
+      this.type.set({ [key]: value }, result => {
         resolve(result);
       });
     });
@@ -30,7 +30,7 @@ class Storage {
   getAll(startingWith) {
     return new Promise(resolve => {
       this.type.get(null, result => {
-        const matching = []
+        const matching = [];
         for (let key of Object.keys(result)) {
           if (key.startsWith(startingWith)) {
             matching.push(result[key]);

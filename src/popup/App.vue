@@ -17,9 +17,9 @@
 </template>
 
 <script>
-import { getLastViewedBook } from "../storage/last-viewed-book";
-import { getBookNotDeleted } from "../storage/book";
-import { SYNC_BOOKS, Message } from "../message";
+import { getLastViewedBook } from '../storage/last-viewed-book';
+import { getBookNotDeleted } from '../storage/book';
+import { SYNC_BOOKS, Message } from '../message';
 
 export default {
   data() {
@@ -35,16 +35,14 @@ export default {
     refreshLastViewedBook() {
       getLastViewedBook().then(lastViewedBook => {
         if (lastViewedBook !== null) {
-          getBookNotDeleted(lastViewedBook.hostname, lastViewedBook.title).then(
-            book => {
-              if (book !== null) {
-                this.book = {
-                  ...book,
-                  chapters: book.chapters.map(ch => ch.number).slice(-5)
-                };
-              }
+          getBookNotDeleted(lastViewedBook.hostname, lastViewedBook.title).then(book => {
+            if (book !== null) {
+              this.book = {
+                ...book,
+                chapters: book.chapters.map(ch => ch.number).slice(-5)
+              };
             }
-          );
+          });
         }
       });
     },

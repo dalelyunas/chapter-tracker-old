@@ -14,10 +14,10 @@
 </template>
 
 <script>
-import { listNotDeletedBooks, deleteBook } from "../../storage/book";
+import { listNotDeletedBooks, deleteBook } from '../../storage/book';
 
 export default {
-  name: "BookTab",
+  name: 'BookTab',
   data() {
     return {
       bookGroups: []
@@ -28,9 +28,7 @@ export default {
   },
   methods: {
     handleDeleteBook(book) {
-      deleteBook(book.hostname, book.title).then(() =>
-        this.refreshBookGroups()
-      );
+      deleteBook(book.hostname, book.title).then(() => this.refreshBookGroups());
     },
     refreshBookGroups() {
       listNotDeletedBooks().then(books => {

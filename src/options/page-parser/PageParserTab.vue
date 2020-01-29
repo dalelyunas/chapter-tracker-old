@@ -21,10 +21,10 @@ import {
   listPageParsers,
   savePageParser,
   deletePageParser
-} from "../../storage/page-parser";
+} from '../../storage/page-parser';
 
 export default {
-  name: "PageParserTab",
+  name: 'PageParserTab',
   data() {
     return {
       parsers: [],
@@ -37,11 +37,7 @@ export default {
   methods: {
     saveParser(parser) {
       savePageParser(
-        new PageParser(
-          parser.hostname,
-          parser.bookTitleParser,
-          parser.chapterNumberParser
-        )
+        new PageParser(parser.hostname, parser.bookTitleParser, parser.chapterNumberParser)
       ).then(() => this.refreshParsers());
     },
     deleteParser(parser) {
