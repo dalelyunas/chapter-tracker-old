@@ -40,9 +40,7 @@ const sendErrorNotification = data => {
 
 export const storeSeenChapter = async (hostname, bookTitle, chapterNum) => {
     const currentTime = getCurrentTime();
-    console.log('pre book')
-    const book = await getBook(hostname, bookTitle) || new Book(hostname, bookTitle, [], null, currentTime, null);
-    console.log(book);
+    const book = await getBook(hostname, bookTitle) || new Book(hostname, bookTitle);
     book.addChapter(new Chapter(chapterNum, currentTime));
     return saveBook(book);
 };

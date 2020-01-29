@@ -40,7 +40,7 @@ export class Chapter {
 }
 
 export class Book {
-    constructor(hostname, title, chapters, currentChapter, updatedAt, deletedAt) {
+    constructor(hostname, title, chapters = [], currentChapter = null, updatedAt = null, deletedAt = null) {
         this.hostname = hostname;
         this.title = title;
         this.chapters = chapters;
@@ -61,8 +61,8 @@ export class Book {
             typeof this.hostname === 'string' &&
             Array.isArray(this.chapters) &&
             typeof this.currentChapter === 'object' &&
-            typeof this.updatedAt === 'number' &&
-            !isNaN(this.updatedAt);
+            (typeof this.updatedAt === 'number' && !isNaN(this.updatedAt)) &&
+            (this.deletedAt === null || (typeof this.deletedAt === 'number' && !isNaN(this.deletedAt)));
     }
     getKey() {
         return getBookKey(this.hostname, this.title);
@@ -84,7 +84,7 @@ export const getBook = async (hostname, bookTitle) => {
 
 export const saveBook = book => {
     if (book.isValid()) {
-        return localStorage.segt(book.getKey(), book);
+        return localStorage.set(book.getKey(), book);
     } else {
         console.error('Saving invalid book')
         return Promise.reject();
