@@ -64,6 +64,9 @@ export class Book {
             (typeof this.updatedAt === 'number' && !isNaN(this.updatedAt)) &&
             (this.deletedAt === null || (typeof this.deletedAt === 'number' && !isNaN(this.deletedAt)));
     }
+    isDeleted() {
+        return this.deletedAt !== null;
+    }
     getKey() {
         return getBookKey(this.hostname, this.title);
     }
@@ -82,6 +85,11 @@ export const getBook = async (hostname, bookTitle) => {
     return objLiteralToBook(await localStorage.get(getBookKey(hostname, bookTitle)));
 };
 
+export const getBookNotDeleted = async (hostname, bookTitle) => {
+    const book = await getBook(hostname, bookTitle);
+    return book === null || book.isDeleted() ? null : book;
+};
+
 export const saveBook = book => {
     if (book.isValid()) {
         return localStorage.set(book.getKey(), book);
@@ -98,11 +106,11 @@ export const listBooks = async () => {
 
 export const listNotDeletedBooks = async () => {
     const objs = await localStorage.getAll(BOOK_KEY_PREFIX);
-    return objs.map(obj => objLiteralToBook(obj)).filter(book => book.deletedAt === null);
+    return objs.map(obj => objLiteralToBook(obj)).filter(book => !book.isDeleted());
 };
 
 export const deleteBook = async (hostname, bookTitle) => {
-    const book = getBookByKey(hostname, bookTitle);
+    const book = await getBook(hostname, bookTitle);
     book.deletedAt = getCurrentTime();
     return saveBook(book);
 };

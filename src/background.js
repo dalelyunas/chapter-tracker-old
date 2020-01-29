@@ -41,6 +41,7 @@ const sendErrorNotification = data => {
 export const storeSeenChapter = async (hostname, bookTitle, chapterNum) => {
     const currentTime = getCurrentTime();
     const book = await getBook(hostname, bookTitle) || new Book(hostname, bookTitle);
+    book.deletedAt = null;
     book.addChapter(new Chapter(chapterNum, currentTime));
     return saveBook(book);
 };
