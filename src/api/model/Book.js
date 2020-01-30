@@ -18,14 +18,7 @@ const insertIntoSortedChapterArray = (arr, chapter) => {
 };
 
 export class Book {
-  constructor(
-    hostname,
-    title,
-    chapters = [],
-    currentChapter = null,
-    updatedAt = null,
-    deletedAt = null
-  ) {
+  constructor(hostname, title, updatedAt, chapters = [], currentChapter = null, deletedAt = null) {
     this.hostname = hostname;
     this.title = title;
     this.chapters = chapters;

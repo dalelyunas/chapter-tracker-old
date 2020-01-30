@@ -32,11 +32,11 @@ class Storage {
     return new Promise((resolve) => {
       this.type.get(null, (result) => {
         const matching = [];
-        for (let key of Object.keys(result)) {
+        Object.keys(result).forEach((key) => {
           if (key.startsWith(startingWith)) {
             matching.push(result[key]);
           }
-        }
+        });
         resolve(matching);
       });
     });
@@ -55,5 +55,5 @@ class SyncStorage extends Storage {
   }
 }
 
-export let localStorage = new LocalStorage();
-export let syncStorage = new SyncStorage();
+export const localStorage = new LocalStorage();
+export const syncStorage = new SyncStorage();

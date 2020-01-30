@@ -1,7 +1,7 @@
 import { localStorage } from './storage/chrome-storage';
-import { getCurrentTime } from '../util';
 import { Book } from './model/Book';
 import { Chapter } from './model/Chapter';
+import { googleDriveAppData } from './storage/google-drive';
 
 const BOOK_KEY_PREFIX = 'book';
 
@@ -15,7 +15,7 @@ export const objLiteralToBook = (obj) => {
   }
   const chapters = obj.chapters.map((ch) => new Chapter(ch.number, ch.updatedAt));
   const currentChapter = new Chapter(obj.currentChapter.number, obj.currentChapter.updatedAt);
-  return new Book(obj.hostname, obj.title, chapters, currentChapter, obj.updatedAt, obj.deletedAt);
+  return new Book(obj.hostname, obj.title, obj.updatedAt, chapters, currentChapter, obj.deletedAt);
 };
 
 export const getBook = async (hostname, bookTitle) => {
@@ -46,6 +46,20 @@ export const listNotDeletedBooks = async () => {
 
 export const deleteBook = async (hostname, bookTitle) => {
   const book = await getBook(hostname, bookTitle);
-  book.deletedAt = getCurrentTime();
+  book.deletedAt = new Date().getTime();
   return saveBook(book);
 };
+
+export const listRemoteBooks = async () => {
+  const bookFiles = await (await googleDriveAppData.listFiles()).filter(file => file.name === 'book.json');
+  if (bookFiles.length !== 1) {
+    await googleDriveAppData.addFile('books.json', 'application/json', '{}');
+    return Promise.reject();
+  }
+
+  return googleDriveAppData.getFile(bookFiles[0].id);
+};
+
+export const saveRemoteBooks = (books) => {
+  return googleDriveAppData.
+}

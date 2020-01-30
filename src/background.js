@@ -11,7 +11,6 @@ import {
   SYNC_BOOKS,
   Message
 } from './message';
-import { getCurrentTime } from './util';
 import { googleDriveAppData } from './api/storage/google-drive';
 
 const IGNORE_PARSE_RESULT_VALUE = 'ignore_parse_result';
@@ -49,8 +48,8 @@ const sendErrorNotification = (data) => {
 };
 
 const storeSeenChapter = async (hostname, bookTitle, chapterNum) => {
-  const currentTime = getCurrentTime();
-  const book = (await getBook(hostname, bookTitle)) || new Book(hostname, bookTitle);
+  const currentTime = new Date().getTime();
+  const book = (await getBook(hostname, bookTitle)) || new Book(hostname, bookTitle, currentTime);
   book.deletedAt = null;
   book.addChapter(new Chapter(chapterNum, currentTime));
   return saveBook(book);
