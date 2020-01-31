@@ -33,9 +33,8 @@ export const saveBook = (book) => {
   return Promise.reject();
 };
 
-export const listBooks = async () => {
-  const objs = await localStorage.getAll(BOOK_KEY_PREFIX);
-  return objs.map((obj) => objLiteralToBook(obj));
+export const getBooksObject = async () => {
+  return localStorage.getAllObject(BOOK_KEY_PREFIX);
 };
 
 export const listNotDeletedBooks = async () => {

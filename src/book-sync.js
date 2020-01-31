@@ -1,4 +1,4 @@
-import { listBooks, saveBook } from './api/book-api';
+import { getBooksObject, saveBook, objLiteralToBook } from './api/book-api';
 import { Book } from './api/model/Book';
 import { Chapter } from './api/model/Chapter';
 import { loadBooks, saveBooks } from './api/book-google-drive-api';
@@ -42,12 +42,13 @@ const mergeBook = (local, remote) => {
 };
 
 const mergeObjects = (local, remote, mergeFunc) => {
-  const combined = { ...local };
+  const combined = local;
+  console.log(combined);
   Object.keys(remote).forEach((key) => {
     if (key in combined) {
       combined[key] = mergeFunc(combined[key], remote[key]);
     } else {
-      combined[key] = remote[key];
+      combined[key] = objLiteralToBook(remote[key]);
     }
   });
 
@@ -56,11 +57,12 @@ const mergeObjects = (local, remote, mergeFunc) => {
 
 export const performBookSync = async () => {
   const { fileId, books } = await loadBooks();
-  const mergedBooks = mergeObjects(await listBooks(), books, mergeBook);
-
+  console.log(books);
+  const mergedBooks = mergeObjects(await getBooksObject(), books, mergeBook);
+  console.log(mergedBooks);
   Object.values(mergedBooks).forEach((book) => {
-    saveBook(book);
+    // saveBook(book);
   });
 
-  return saveBooks(fileId, mergedBooks);
+  // return saveBooks(fileId, mergedBooks);
 };

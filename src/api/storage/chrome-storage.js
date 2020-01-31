@@ -41,6 +41,20 @@ class Storage {
       });
     });
   }
+
+  getAllObject(startingWith) {
+    return new Promise((resolve) => {
+      this.type.get(null, (result) => {
+        const matching = {};
+        Object.keys(result).forEach((key) => {
+          if (key.startsWith(startingWith)) {
+            matching[key] = result[key];
+          }
+        });
+        resolve(matching);
+      });
+    });
+  }
 }
 
 class LocalStorage extends Storage {
