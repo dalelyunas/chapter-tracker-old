@@ -1,4 +1,7 @@
-import { Book, insertIntoSortedChapterArray, listBooks, saveBook } from './storage/book';
+import { listBooks, saveBook } from './api/book-api';
+import { Book } from './api/model/Book';
+import { Chapter } from './api/model/Chapter';
+import { loadBooks, saveBooks } from './api/book-google-drive-api';
 
 const maxCurrentChapter = (a, b) => {
   if (a === null) {
@@ -21,11 +24,6 @@ const maxDeletedAt = (a, b) => {
 };
 
 const mergeBook = (local, remote) => {
-  let combinedChapters = [];
-  [...local.chapters, ...remote.chapters].forEach((ch) => {
-    combinedChapters = insertIntoSortedChapterArray(combinedChapters, ch);
-  });
-
   const currentChapter = maxCurrentChapter(local.currentChapter, remote.currentChapter);
 
   const updatedAt = Math.max(local.updatedAt, remote.updatedAt);
@@ -34,14 +32,13 @@ const mergeBook = (local, remote) => {
     deletedAt = null;
   }
 
-  return new Book(
-    remote.hostname,
-    remote.title,
-    updatedAt,
-    combinedChapters,
-    currentChapter,
-    deletedAt
-  );
+  const book = new Book(remote.hostname, remote.title, updatedAt, [], currentChapter, deletedAt);
+
+  [...local.chapters, ...remote.chapters].forEach((ch) => {
+    book.addChapter(new Chapter(ch.number, ch.updatedAt));
+  });
+
+  return book;
 };
 
 const mergeObjects = (local, remote, mergeFunc) => {
@@ -57,13 +54,13 @@ const mergeObjects = (local, remote, mergeFunc) => {
   return combined;
 };
 
-const performBookSync = async () => {
-  // Get from drive
+export const performBookSync = async () => {
+  const { fileId, books } = await loadBooks();
+  const mergedBooks = mergeObjects(await listBooks(), books, mergeBook);
 
-  // Merge items
-  const books = mergeObjects(await listBooks(), {}, mergeBook);
-
-  Object.values(books).forEach((book) => {
+  Object.values(mergedBooks).forEach((book) => {
     saveBook(book);
   });
+
+  return saveBooks(fileId, mergedBooks);
 };

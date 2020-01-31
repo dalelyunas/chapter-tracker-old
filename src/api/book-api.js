@@ -1,7 +1,6 @@
 import { localStorage } from './storage/chrome-storage';
 import { Book } from './model/Book';
 import { Chapter } from './model/Chapter';
-import { googleDriveAppData } from './storage/google-drive';
 
 const BOOK_KEY_PREFIX = 'book';
 
@@ -49,17 +48,3 @@ export const deleteBook = async (hostname, bookTitle) => {
   book.deletedAt = new Date().getTime();
   return saveBook(book);
 };
-
-export const listRemoteBooks = async () => {
-  const bookFiles = await (await googleDriveAppData.listFiles()).filter(file => file.name === 'book.json');
-  if (bookFiles.length !== 1) {
-    await googleDriveAppData.addFile('books.json', 'application/json', '{}');
-    return Promise.reject();
-  }
-
-  return googleDriveAppData.getFile(bookFiles[0].id);
-};
-
-export const saveRemoteBooks = (books) => {
-  return googleDriveAppData.
-}

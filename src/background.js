@@ -11,7 +11,7 @@ import {
   SYNC_BOOKS,
   Message
 } from './message';
-import { googleDriveAppData } from './api/storage/google-drive';
+import { performBookSync } from './book-sync';
 
 const IGNORE_PARSE_RESULT_VALUE = 'ignore_parse_result';
 
@@ -89,9 +89,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 chrome.runtime.onMessage.addListener((message) => {
   if (message.type === SYNC_BOOKS) {
-    googleDriveAppData
-      .getJsonFile('1tkSpr13RDnyuMcuIlxwdAC7yAIudmcdqdx3gReCF8RLBlTQusA')
-      .then((data) => console.log(data))
-      .catch(() => console.log('error'));
+    performBookSync();
   }
 });

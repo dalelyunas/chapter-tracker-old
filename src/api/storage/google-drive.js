@@ -38,7 +38,7 @@ export class GoogleDriveAppData {
     if (this.gapiReady === false) {
       await this.initGapi();
     }
-    const token = await this.getAuthToken();
+    const token = await GoogleDriveAppData.getAuthToken();
     gapi.auth.setToken({
       access_token: token
     });
@@ -50,7 +50,7 @@ export class GoogleDriveAppData {
       fileId,
       alt: 'media'
     });
-    return resp.result;
+    return resp;
   }
 
   async listFiles() {
