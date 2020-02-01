@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { listNotDeletedBooks, deleteBook } from '../../api/book-api';
+import { getActiveBooks, deleteBook } from '../../api/book-api';
 
 export default {
   name: 'BookTab',
@@ -31,7 +31,7 @@ export default {
       deleteBook(book.hostname, book.title).then(() => this.refreshBookGroups());
     },
     refreshBookGroups() {
-      listNotDeletedBooks().then((books) => {
+      getActiveBooks().then((books) => {
         const reducer = (groups, book) => {
           if (book.hostname in groups) {
             groups[book.hostname].books.push(book);

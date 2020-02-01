@@ -1,77 +1,52 @@
-import { Book } from './api/model/Book';
-import { Chapter } from './api/model/Chapter';
-import { LastViewedBook } from './api/model/LastViewedBook';
+import * as Book from './model/Book';
+import { makeLastViewedBook } from './model/LastViewedBook';
 import { getPageParser } from './api/page-parser-api';
 import { saveBook, getBook } from './api/book-api';
 import { saveLastViewedBook } from './api/last-viewed-book-api';
-import {
-  SEND_PAGE_PARSER_TYPE,
-  PAGE_PARSER_RESULT_TYPE,
-  ERROR_MESSAGE_TYPE,
-  SYNC_BOOKS,
-  Message
-} from './message';
+import { messageTypes, makePageParserSentMessage } from './model/Message';
 import { performBookSync } from './book-sync';
-
-const IGNORE_PARSE_RESULT_VALUE = 'ignore_parse_result';
+import { sendInvalidDataNotification, sendErrorNotification } from './api/notification-api';
 
 const getHostnameUnsafe = (url) => {
   return new URL(url).hostname;
 };
 
-const isIgnoreResult = (data) =>
-  data !== undefined &&
-  (data.chapterNumber === IGNORE_PARSE_RESULT_VALUE ||
-    data.bookTitle === IGNORE_PARSE_RESULT_VALUE);
-
-const sendNotification = (title, hostname, message) => {
-  chrome.notifications.clear('parse_failed', () => {
-    chrome.notifications.create('parse_failed', {
-      title: title + hostname,
-      message,
-      type: 'basic',
-      iconUrl: 'icons/icon_48.png'
-    });
-  });
-};
-
-const sendInvalidDataNotification = (parseResult) => {
-  sendNotification(
-    'Invalid data: ',
-    parseResult.hostname,
-    `Chapter number: ${parseResult.chapterNumber}, Book title: ${parseResult.bookTitle}`
-  );
-};
-
-const sendErrorNotification = (data) => {
-  sendNotification('Error: ', data.hostname, data.error);
-};
-
-const storeSeenChapter = async (hostname, bookTitle, chapterNum) => {
+const storeChapter = async (hostname, bookTitle, chapterNum) => {
   const currentTime = new Date().getTime();
-  const book = (await getBook(hostname, bookTitle)) || new Book(hostname, bookTitle, currentTime);
-  book.deletedAt = null;
-  book.addChapter(new Chapter(chapterNum, currentTime));
-  return saveBook(book);
+  const book =
+    (await getBook(hostname, bookTitle)) || Book.makeBook(hostname, bookTitle, currentTime);
+
+  const chapter = Book.makeChapter(chapterNum, currentTime);
+  return saveBook(Book.restoreBook(Book.addChapterToBook(book, chapter)));
 };
 
-const handleResponseMessage = (message) => {
-  if (message.type === ERROR_MESSAGE_TYPE) {
-    sendErrorNotification(message.data);
-  } else if (message.type === PAGE_PARSER_RESULT_TYPE && !isIgnoreResult(message.data)) {
-    const parseResult = message.data;
-    storeSeenChapter(parseResult.hostname, parseResult.bookTitle, parseResult.chapterNumber)
+const processParseResult = (parseResult) => {
+  if (!parseResult.ignore) {
+    storeChapter(parseResult.hostname, parseResult.bookTitle, parseResult.chapterNumber)
       .then(() =>
-        saveLastViewedBook(new LastViewedBook(parseResult.hostname, parseResult.bookTitle))
+        saveLastViewedBook(makeLastViewedBook(parseResult.hostname, parseResult.bookTitle))
       )
-      .catch(() => sendInvalidDataNotification(parseResult));
+      .catch(() => sendInvalidDataNotification(parseResult, parseResult.hostname));
+  }
+};
+
+const processResponseMessage = (message) => {
+  switch (message.type) {
+    case messageTypes.ERROR:
+      sendErrorNotification(message.data.error, message.data.hostname);
+      break;
+
+    case messageTypes.PAGE_PARSER_APPLIED:
+      processParseResult(message.data);
+      break;
+
+    default:
   }
 };
 
 const sendPageParser = (pageParser, tabId) => {
-  const payload = new Message(SEND_PAGE_PARSER_TYPE, pageParser);
-  chrome.tabs.sendMessage(tabId, payload, (response) => {
-    handleResponseMessage(response);
+  chrome.tabs.sendMessage(tabId, makePageParserSentMessage(pageParser), (response) => {
+    processResponseMessage(response);
   });
 };
 
@@ -87,8 +62,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
-chrome.runtime.onMessage.addListener((message) => {
-  if (message.type === SYNC_BOOKS) {
-    performBookSync();
+chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
+  switch (message.type) {
+    case messageTypes.BOOK_SYNC_REQUESTED:
+      performBookSync()
+        .then()
+        .catch();
+      break;
+    default:
   }
 });

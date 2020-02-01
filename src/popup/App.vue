@@ -18,7 +18,7 @@
 
 <script>
 import { getLastViewedBook } from '../api/last-viewed-book-api';
-import { getBookNotDeleted } from '../api/book-api';
+import { getActiveBook } from '../api/book-api';
 import { SYNC_BOOKS, Message } from '../message';
 
 export default {
@@ -35,7 +35,7 @@ export default {
     refreshLastViewedBook() {
       getLastViewedBook().then((lastViewedBook) => {
         if (lastViewedBook !== null) {
-          getBookNotDeleted(lastViewedBook.hostname, lastViewedBook.title).then((book) => {
+          getActiveBook(lastViewedBook.hostname, lastViewedBook.title).then((book) => {
             if (book !== null) {
               this.book = {
                 ...book,
@@ -50,7 +50,9 @@ export default {
       chrome.runtime.openOptionsPage();
     },
     syncBooks() {
+      syncingBooks = true;
       chrome.runtime.sendMessage(new Message(SYNC_BOOKS, {}), (response) => {
+        syncingBooks = false;
         // Nothing
       });
     }

@@ -1,9 +1,11 @@
-import {
-  SEND_PAGE_PARSER_TYPE,
-  PAGE_PARSER_RESULT_TYPE,
-  ERROR_MESSAGE_TYPE,
-  Message
-} from './message';
+import { messageTypes, makePageParserAppliedMessage, makeErrorMessage } from './model/Message';
+
+const IGNORE_PARSE_RESULT_VALUE = 'ignore_parse_result';
+
+const isIgnoreResult = (data) =>
+  data !== undefined &&
+  (data.chapterNumber === IGNORE_PARSE_RESULT_VALUE ||
+    data.bookTitle === IGNORE_PARSE_RESULT_VALUE);
 
 const applyParserBody = (parserBodyString) => {
   if (parserBodyString === undefined || parserBodyString === null) {
@@ -16,22 +18,29 @@ const applyParserBody = (parserBodyString) => {
 
 const getParseResult = (pageParser) => {
   try {
-    return new Message(PAGE_PARSER_RESULT_TYPE, {
+    const parseResult = {
       bookTitle: applyParserBody(pageParser.bookTitleParser),
-      chapterNumber: applyParserBody(pageParser.chapterNumberParser),
-      hostname: window.location.hostname
+      chapterNumber: applyParserBody(pageParser.chapterNumberParser)
+    };
+    return makePageParserAppliedMessage(messageTypes.PAGE_PARSER_APPLIED, {
+      ...parseResult,
+      hostname: window.location.hostname,
+      ignore: isIgnoreResult(parseResult)
     });
   } catch (e) {
-    return new Message(ERROR_MESSAGE_TYPE, {
+    return makeErrorMessage(messageTypes.ERROR, {
       error: e.message,
       hostname: window.location.hostname
     });
   }
 };
 
-chrome.runtime.onMessage.addListener((request, _, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
   chrome.runtime.onMessage.removeListener();
-  if (request.type === SEND_PAGE_PARSER_TYPE) {
-    sendResponse(getParseResult(request.data));
+  switch (message.type) {
+    case messageTypes.PAGE_PARSER_SENT:
+      sendResponse(getParseResult(message.data));
+      break;
+    default:
   }
 });

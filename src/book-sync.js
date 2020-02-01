@@ -1,6 +1,6 @@
 import { getBooksObject, saveBook, objLiteralToBook } from './api/book-api';
-import { Book } from './api/model/Book';
-import { Chapter } from './api/model/Chapter';
+import { makeBook } from './model/Book';
+import { Chapter } from './model/Chapter';
 import { loadBooks, saveBooks } from './api/book-google-drive-api';
 
 const maxCurrentChapter = (a, b) => {
@@ -31,6 +31,7 @@ const mergeBook = (local, remote) => {
   if (updatedAt > deletedAt) {
     deletedAt = null;
   }
+  let book = makeBook(remote.hostname, remote.title, updatedAt);
 
   const book = new Book(remote.hostname, remote.title, updatedAt, [], currentChapter, deletedAt);
 

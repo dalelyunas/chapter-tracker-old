@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { PageParser } from '../../api/model/PageParser';
+import { makePageParser } from '../../model/PageParser';
 import { listPageParsers, savePageParser, deletePageParser } from '../../api/page-parser-api';
 
 export default {
@@ -33,7 +33,7 @@ export default {
   methods: {
     saveParser(parser) {
       savePageParser(
-        new PageParser(parser.hostname, parser.bookTitleParser, parser.chapterNumberParser)
+        makePageParser(parser.hostname, parser.bookTitleParser, parser.chapterNumberParser)
       ).then(() => this.refreshParsers());
     },
     deleteParser(parser) {

@@ -1,6 +1,5 @@
 import { localStorage } from './storage/chrome-storage';
-import { Book } from './model/Book';
-import { Chapter } from './model/Chapter';
+import { isBookValid, markDeleted } from '../model/Book';
 
 const BOOK_KEY_PREFIX = 'book';
 
@@ -8,42 +7,32 @@ const getBookKey = (hostname, bookTitle) => {
   return `${BOOK_KEY_PREFIX}:${hostname}:${bookTitle}`;
 };
 
-export const objLiteralToBook = (obj) => {
-  if (obj === null) {
-    return null;
-  }
-  const chapters = obj.chapters.map((ch) => new Chapter(ch.number, ch.updatedAt));
-  const currentChapter = new Chapter(obj.currentChapter.number, obj.currentChapter.updatedAt);
-  return new Book(obj.hostname, obj.title, obj.updatedAt, chapters, currentChapter, obj.deletedAt);
-};
-
 export const getBook = async (hostname, bookTitle) => {
-  return objLiteralToBook(await localStorage.get(getBookKey(hostname, bookTitle)));
+  return Object.freeze(await localStorage.get(getBookKey(hostname, bookTitle)));
 };
 
-export const getBookNotDeleted = async (hostname, bookTitle) => {
+export const getActiveBook = async (hostname, bookTitle) => {
   const book = await getBook(hostname, bookTitle);
-  return book === null || book.isDeleted() ? null : book;
+  return book === null || book.deletedAt !== null ? null : book;
 };
 
 export const saveBook = (book) => {
-  if (book.isValid()) {
+  if (isBookValid(book)) {
     return localStorage.set(getBookKey(book.hostname, book.title), book);
   }
-  return Promise.reject();
+  return Promise.reject(new TypeError('book is invalid'));
 };
 
 export const getBooksObject = async () => {
   return localStorage.getAllObject(BOOK_KEY_PREFIX);
 };
 
-export const listNotDeletedBooks = async () => {
+export const getActiveBooks = async () => {
   const objs = await localStorage.getAll(BOOK_KEY_PREFIX);
-  return objs.map((obj) => objLiteralToBook(obj)).filter((book) => !book.isDeleted());
+  return objs.map((obj) => Object.freeze(obj)).filter((book) => book.deletedAt === null);
 };
 
 export const deleteBook = async (hostname, bookTitle) => {
   const book = await getBook(hostname, bookTitle);
-  book.deletedAt = new Date().getTime();
-  return saveBook(book);
+  return saveBook(markDeleted(book, new Date().getTime()));
 };
