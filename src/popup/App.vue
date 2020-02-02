@@ -19,7 +19,7 @@
 <script>
 import { getLastViewedBook } from '../api/last-viewed-book-api';
 import { getActiveBook } from '../api/book-api';
-import { SYNC_BOOKS, Message } from '../message';
+import {} from '../message';
 
 export default {
   data() {

@@ -39,6 +39,17 @@ export const addChapterToBook = (book, chapter) => {
   });
 };
 
+export const addToChapters = (book, chapter) => {
+  if (!isChapterValid(chapter)) {
+    throw new TypeError('chapter is invalid');
+  }
+
+  return Object.freeze({
+    ...book,
+    chapters: insertIntoSortedChapterArray(book.chapters, chapter)
+  });
+};
+
 export const markDeleted = (book, deletedAt) => {
   return Object.freeze({
     ...book,
@@ -61,6 +72,17 @@ export const makeBook = (hostname, title, updatedAt) => {
     chapters: [],
     currentChapter: null,
     deletedAt: null
+  });
+};
+
+export const makeBookFull = (hostname, title, updatedAt, chapters, currentChapter, deletedAt) => {
+  return Object.freeze({
+    hostname,
+    title,
+    updatedAt,
+    chapters,
+    currentChapter,
+    deletedAt
   });
 };
 

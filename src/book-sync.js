@@ -1,6 +1,5 @@
-import { getBooksObject, saveBook, objLiteralToBook } from './api/book-api';
-import { makeBook } from './model/Book';
-import { Chapter } from './model/Chapter';
+import { getBooksObject, saveBook } from './api/book-api';
+import { makeBookFull, addToChapters } from './model/Book';
 import { loadBooks, saveBooks } from './api/book-google-drive-api';
 
 const maxCurrentChapter = (a, b) => {
@@ -25,31 +24,29 @@ const maxDeletedAt = (a, b) => {
 
 const mergeBook = (local, remote) => {
   const currentChapter = maxCurrentChapter(local.currentChapter, remote.currentChapter);
-
   const updatedAt = Math.max(local.updatedAt, remote.updatedAt);
   let deletedAt = maxDeletedAt(local.deletedAt, remote.deletedAt);
   if (updatedAt > deletedAt) {
     deletedAt = null;
   }
-  let book = makeBook(remote.hostname, remote.title, updatedAt);
 
-  const book = new Book(remote.hostname, remote.title, updatedAt, [], currentChapter, deletedAt);
+  let book = makeBookFull(remote.hostname, remote.title, updatedAt, [], currentChapter, deletedAt);
 
   [...local.chapters, ...remote.chapters].forEach((ch) => {
-    book.addChapter(new Chapter(ch.number, ch.updatedAt));
+    book = addToChapters(ch.number, ch.updatedAt);
   });
 
   return book;
 };
 
 const mergeObjects = (local, remote, mergeFunc) => {
-  const combined = local;
+  const combined = { ...local };
   console.log(combined);
   Object.keys(remote).forEach((key) => {
     if (key in combined) {
       combined[key] = mergeFunc(combined[key], remote[key]);
     } else {
-      combined[key] = objLiteralToBook(remote[key]);
+      combined[key] = { ...remote[key] };
     }
   });
 
