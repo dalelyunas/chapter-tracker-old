@@ -19,7 +19,7 @@
 <script>
 import { getLastViewedBook } from '../api/last-viewed-book-api';
 import { getActiveBook } from '../api/book-api';
-import {} from '../message';
+import { makeBookSyncRequestedMessage } from '../model/Message';
 
 export default {
   data() {
@@ -50,9 +50,9 @@ export default {
       chrome.runtime.openOptionsPage();
     },
     syncBooks() {
-      syncingBooks = true;
-      chrome.runtime.sendMessage(new Message(SYNC_BOOKS, {}), (response) => {
-        syncingBooks = false;
+      this.syncingBooks = true;
+      chrome.runtime.sendMessage(makeBookSyncRequestedMessage(), (response) => {
+        this.syncingBooks = false;
         // Nothing
       });
     }

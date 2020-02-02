@@ -20,6 +20,7 @@ export const saveBook = (book) => {
   if (isBookValid(book)) {
     return localStorage.set(getBookKey(book.hostname, book.title), book);
   }
+  console.log(book);
   return Promise.reject(new TypeError('book is invalid'));
 };
 

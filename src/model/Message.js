@@ -7,10 +7,6 @@ export const messageTypes = {
 };
 
 export const makeMessage = (type, data) => {
-  if (messageTypes[type] === undefined) {
-    throw new TypeError('message type is invalid');
-  }
-
   return Object.freeze({
     type,
     data

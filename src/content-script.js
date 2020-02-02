@@ -22,13 +22,13 @@ const getParseResult = (pageParser) => {
       bookTitle: applyParserBody(pageParser.bookTitleParser),
       chapterNumber: applyParserBody(pageParser.chapterNumberParser)
     };
-    return makePageParserAppliedMessage(messageTypes.PAGE_PARSER_APPLIED, {
+    return makePageParserAppliedMessage({
       ...parseResult,
       hostname: window.location.hostname,
       ignore: isIgnoreResult(parseResult)
     });
   } catch (e) {
-    return makeErrorMessage(messageTypes.ERROR, {
+    return makeErrorMessage({
       error: e.message,
       hostname: window.location.hostname
     });
