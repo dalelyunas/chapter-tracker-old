@@ -3,7 +3,12 @@ import { makeLastViewedBook } from './model/LastViewedBook';
 import { getPageParser } from './api/page-parser-api';
 import { saveBook, getBook } from './api/book-api';
 import { saveLastViewedBook } from './api/last-viewed-book-api';
-import { messageTypes, makePageParserSentMessage } from './model/Message';
+import {
+  messageTypes,
+  makePageParserSentMessage,
+  makeBookSyncCompletedMessage,
+  makeErrorMessage
+} from './model/Message';
 import { performBookSync } from './book-sync';
 import { sendInvalidDataNotification, sendErrorNotification } from './api/notification-api';
 
@@ -66,9 +71,12 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
   switch (message.type) {
     case messageTypes.BOOK_SYNC_REQUESTED:
       performBookSync()
-        .then()
-        .catch();
+        .then(() => {
+          sendResponse(makeBookSyncCompletedMessage());
+        })
+        .catch(() => sendResponse(makeErrorMessage()));
       break;
     default:
   }
+  return true;
 });

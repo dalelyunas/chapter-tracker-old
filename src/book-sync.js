@@ -54,13 +54,13 @@ const mergeObjects = (local, remote, mergeFunc) => {
 
 export const performBookSync = async () => {
   const { fileId, books } = await loadBooks();
-  console.log(books);
   const mergedBooks = mergeObjects(await getBooksObject(), books, mergeBook);
-  console.log(mergedBooks);
-  Object.values(mergedBooks).forEach((book) => {
-    console.log(book);
-    saveBook(book);
-  });
+
+  const bookValues = Object.values(mergedBooks);
+  for (let i = 0; i < bookValues.length; i += 1) {
+    // eslint-disable-next-line no-await-in-loop
+    await saveBook(bookValues[i]);
+  }
 
   return saveBooks(fileId, mergedBooks);
 };

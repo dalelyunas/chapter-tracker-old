@@ -12,20 +12,26 @@
     <h5 v-else>No book found</h5>
 
     <b-link v-on:click="goToOptionsPage">Options</b-link>
-    <b-button v-on:click="syncBooks">Sync books</b-button>
+    <b-button variant="primary" v-bind:disabled="syncingBooks" v-on:click="syncBooks"
+      >Sync books</b-button
+    >
+    <p v-if="errorMsg !== null">Error while syncing</p>
+    <p v-if="syncSuccess">Sync successful</p>
   </b-card>
 </template>
 
 <script>
 import { getLastViewedBook } from '../api/last-viewed-book-api';
 import { getActiveBook } from '../api/book-api';
-import { makeBookSyncRequestedMessage } from '../model/Message';
+import { makeBookSyncRequestedMessage, messageTypes } from '../model/Message';
 
 export default {
   data() {
     return {
       book: null,
-      syncingBooks: false
+      syncingBooks: false,
+      errorMsg: null,
+      syncSuccess: false
     };
   },
   created() {
@@ -51,9 +57,20 @@ export default {
     },
     syncBooks() {
       this.syncingBooks = true;
-      chrome.runtime.sendMessage(makeBookSyncRequestedMessage(), (response) => {
+      this.errorMsg = null;
+      this.syncSuccess = false;
+      chrome.runtime.sendMessage(makeBookSyncRequestedMessage(), (message) => {
         this.syncingBooks = false;
-        // Nothing
+        switch (message.type) {
+          case messageTypes.ERROR:
+            this.errorMsg = message.data.error;
+            break;
+          case messageTypes.BOOK_SYNC_COMPLETED:
+            this.syncSuccess = true;
+            break;
+
+          default:
+        }
       });
     }
   }
