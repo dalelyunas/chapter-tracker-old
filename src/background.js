@@ -22,7 +22,7 @@ const storeChapter = async (hostname, bookTitle, chapterNum) => {
     (await getBook(hostname, bookTitle)) || Book.makeBook(hostname, bookTitle, currentTime);
 
   const chapter = Book.makeChapter(chapterNum, currentTime);
-  return saveBook(Book.restoreBook(Book.addChapterToBook(book, chapter)));
+  return saveBook(Book.restoreBook(Book.addChapter(book, chapter)));
 };
 
 const processParseResult = (parseResult) => {

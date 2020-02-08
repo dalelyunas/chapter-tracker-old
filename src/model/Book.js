@@ -26,7 +26,7 @@ const isChapterValid = (chapter) => {
   );
 };
 
-export const addChapterToBook = (book, chapter) => {
+export const addChapter = (book, chapter) => {
   if (!isChapterValid(chapter)) {
     throw new TypeError('chapter is invalid');
   }
@@ -39,7 +39,7 @@ export const addChapterToBook = (book, chapter) => {
   });
 };
 
-export const addToChapters = (book, chapter) => {
+export const addChapterWithoutUpdate = (book, chapter) => {
   if (!isChapterValid(chapter)) {
     throw new TypeError('chapter is invalid');
   }

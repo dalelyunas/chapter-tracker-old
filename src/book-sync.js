@@ -1,5 +1,5 @@
 import { getBooksObject, saveBook } from './api/book-api';
-import { makeBookFull, addToChapters } from './model/Book';
+import { makeBookFull, addChapterWithoutUpdate } from './model/Book';
 import { loadBooks, saveBooks } from './api/book-google-drive-api';
 
 const newestCurrentChapter = (a, b) => {
@@ -33,7 +33,7 @@ const mergeBook = (local, remote) => {
 
   let book = makeBookFull(remote.hostname, remote.title, updatedAt, [], currentChapter, deletedAt);
   [...local.chapters, ...remote.chapters].forEach((ch) => {
-    book = addToChapters(book, { ...ch });
+    book = addChapterWithoutUpdate(book, { ...ch });
   });
 
   return book;
