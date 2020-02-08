@@ -17,7 +17,7 @@
 
 <script>
 import { makePageParser } from '../../model/PageParser';
-import { listPageParsers, savePageParser, deletePageParser } from '../../api/page-parser-api';
+import { getPageParsers, savePageParser, deletePageParser } from '../../api/page-parser-api';
 
 export default {
   name: 'PageParserTab',
@@ -40,7 +40,7 @@ export default {
       deletePageParser(parser.hostname).then(() => this.refreshParsers());
     },
     refreshParsers() {
-      listPageParsers().then((parsers) => {
+      getPageParsers().then((parsers) => {
         this.parsers = parsers;
         this.newParser = {};
       });

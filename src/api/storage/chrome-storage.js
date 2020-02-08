@@ -1,36 +1,31 @@
-/* eslint-disable max-classes-per-file */
-class Storage {
-  constructor(type) {
-    this.type = type;
-  }
-
-  get(key) {
+const makeChromeStorage = (type) => ({
+  get: (key) => {
     return new Promise((resolve) => {
-      this.type.get(key, (result) => {
+      type.get(key, (result) => {
         resolve(result[key] || null);
       });
     });
-  }
+  },
 
-  set(key, value) {
+  set: (key, value) => {
     return new Promise((resolve) => {
-      this.type.set({ [key]: value }, (result) => {
+      type.set({ [key]: value }, (result) => {
         resolve(result);
       });
     });
-  }
+  },
 
-  delete(key) {
+  delete: (key) => {
     return new Promise((resolve) => {
-      this.type.remove(key, (result) => {
+      type.remove(key, (result) => {
         resolve(result);
       });
     });
-  }
+  },
 
-  getAll(startingWith) {
+  getAllArray: (startingWith) => {
     return new Promise((resolve) => {
-      this.type.get(null, (result) => {
+      type.get(null, (result) => {
         const matching = [];
         Object.keys(result).forEach((key) => {
           if (key.startsWith(startingWith)) {
@@ -40,11 +35,11 @@ class Storage {
         resolve(matching);
       });
     });
-  }
+  },
 
-  getAllObject(startingWith) {
+  getAllObject: (startingWith) => {
     return new Promise((resolve) => {
-      this.type.get(null, (result) => {
+      type.get(null, (result) => {
         const matching = {};
         Object.keys(result).forEach((key) => {
           if (key.startsWith(startingWith)) {
@@ -55,19 +50,7 @@ class Storage {
       });
     });
   }
-}
+});
 
-class LocalStorage extends Storage {
-  constructor() {
-    super(chrome.storage.local);
-  }
-}
-
-class SyncStorage extends Storage {
-  constructor() {
-    super(chrome.storage.sync);
-  }
-}
-
-export const localStorage = new LocalStorage();
-export const syncStorage = new SyncStorage();
+export const localStorage = makeChromeStorage(chrome.storage.local);
+export const syncStorage = makeChromeStorage(chrome.storage.sync);
