@@ -6,11 +6,9 @@
   "scripts": {
     "prettier": "prettier \"src/**/*.{js,vue}\"",
     "prettier:write": "npm run prettier -- --write",
-    "build": "cross-env NODE_ENV=production webpack --hide-modules",
-    "build:dev": "cross-env NODE_ENV=development webpack",
-    "build-zip": "node scripts/build-zip.js",
+    "build": "webpack --mode=production --hide-modules",
     "watch": "npm run build -- --watch",
-    "watch:dev": "cross-env HMR=true npm run build:dev -- --watch"
+    "build-zip": "node scripts/build-zip.js"
   },
   "dependencies": {
     "bootstrap": "^4.4.1",
@@ -22,30 +20,21 @@
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
-    "@babel/runtime-corejs3": "^7.4.0",
-    "@types/chrome": "^0.0.74",
     "archiver": "^3.0.0",
     "babel-loader": "^8.0.2",
     "copy-webpack-plugin": "^5.1.1",
-    "core-js": "^3.0.1",
-    "cross-env": "^5.2.0",
     "css-loader": "^2.1.1",
-    "deepmerge": "^4.2.2",
-    "ejs": "^2.6.1",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-import": "^2.20.0",
-    "fibers": "^4.0.2",
     "file-loader": "^1.1.11",
     "mini-css-extract-plugin": "^0.4.4",
-    "node-sass": "^4.13.1",
     "prettier": "^1.19.1",
     "sass": "^1.25.0",
     "sass-loader": "^7.3.1",
     "vue-loader": "^15.4.2",
     "vue-template-compiler": "^2.6.11",
-    "vuetify": "^2.2.11",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
   }
