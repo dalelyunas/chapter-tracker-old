@@ -29,7 +29,7 @@ export const getBooksObject = async () => {
 };
 
 export const getActiveBooks = async () => {
-  const objs = await localStorage.getAll(BOOK_KEY_PREFIX);
+  const objs = await localStorage.getAllArray(BOOK_KEY_PREFIX);
   return objs.map((obj) => Object.freeze(obj)).filter((book) => book.deletedAt === null);
 };
 

@@ -8,7 +8,7 @@ const getPageParserKey = (hostname) => {
 };
 
 export const getPageParsers = async () => {
-  const objs = await syncStorage.getAll(PAGE_PARSER_KEY_PREFIX);
+  const objs = await syncStorage.getAllArray(PAGE_PARSER_KEY_PREFIX);
   return objs.map((obj) => Object.freeze(obj));
 };
 
