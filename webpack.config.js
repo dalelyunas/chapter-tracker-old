@@ -44,6 +44,22 @@ const config = {
           outputPath: "/images/",
           emitFile: false
         }
+      },
+      {
+        test: /\.s(c|a)ss$/,
+        use: [
+          "vue-style-loader",
+          "css-loader",
+          {
+            options: {
+              implementation: require("sass"),
+              sassOptions: {
+                fiber: require("fibers"),
+                indentedSyntax: true // optional
+              }
+            }
+          }
+        ]
       }
     ]
   },
