@@ -1,12 +1,13 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const config = {
   context: `${__dirname}/src`,
   entry: {
     'popup/popup': './popup/popup.js',
-    'options/options': './options/options.js',
+    // 'options/options': './options/options.js',
     'content-script': './content-script.js',
     background: './background.js'
   },
@@ -49,6 +50,7 @@ const config = {
   },
   plugins: [
     new VueLoaderPlugin(),
+    new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].css'
     }),
