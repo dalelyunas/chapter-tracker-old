@@ -11,8 +11,6 @@
     "build-zip": "node scripts/build-zip.js"
   },
   "dependencies": {
-    "bootstrap": "^4.4.1",
-    "bootstrap-vue": "^2.1.0",
     "highlight.js": "^9.18.0",
     "vue": "^2.6.10",
     "vue-highlightjs": "^1.3.3",

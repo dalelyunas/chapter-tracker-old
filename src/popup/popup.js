@@ -1,19 +1,13 @@
 import Vue from 'vue';
-import { BCard, BLink, BButton } from 'bootstrap-vue';
 import App from './App.vue';
+import vuetify from '../../plugins/vuetify';
 
-import DataPairView from './DataPairView.vue';
+import LabelValue from './LabelValue.vue';
 
-import 'bootstrap/dist/css/bootstrap.css';
-
-Vue.component('b-card', BCard);
-Vue.component('b-link', BLink);
-Vue.component('b-button', BButton);
-
-Vue.component('data-pair-view', DataPairView);
+Vue.component('label-value', LabelValue);
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  render: h => h(App)
-});
+  vuetify,
+  render: (h) => h(App)
+}).$mount('#app');
