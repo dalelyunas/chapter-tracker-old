@@ -6,5 +6,7 @@
 // Update Bulma's global variables
 $family-sans-serif: 'Lato', sans-serif;
 
-// Import only what you need from Bulma
-@import '../../node_modules/bulma/bulma.sass';
+@import '../../node_modules/bulma/sass/utilities/_all.sass';
+@import '../../node_modules/bulma/sass/base/_all.sass';
+@import '../../node_modules/bulma/sass/elements/button.sass';
+@import '../../node_modules/bulma/sass/elements/title.sass';
