@@ -1,7 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const config = {
   context: `${__dirname}/src`,
@@ -34,7 +33,7 @@ const config = {
         use: [MiniCssExtractPlugin.loader, 'css-loader']
       },
       {
-        test: /\.sass$/,
+        test: /\.s[ca]ss$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       },
       {
@@ -50,7 +49,6 @@ const config = {
   },
   plugins: [
     new VueLoaderPlugin(),
-    new BundleAnalyzerPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].css'
     }),

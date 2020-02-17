@@ -1,17 +1,19 @@
 <template>
-  <div>
+  <div class="popupContainer">
     <div v-if="book !== null">
-      <p class="display-1">Last Viewed Book</p>
-      <label-value label="Book title" v-bind:value="book.title" />
+      <p class="title is-4">Last Viewed Book</p>
+      <label-value label="Hostname" v-bind:value="book.hostname" />
+      <label-value label="Title" v-bind:value="book.title" />
       <label-value label="Current chapter" v-bind:value="book.currentChapter.number" />
       <label-value label="Last 5 chapters" v-bind:value="book.chapters" />
-      <label-value label="Updated At" v-bind:value="new Date(book.updatedAt).toDateString()" />
-      <label-value label="Hostname" v-bind:value="book.hostname" />
+      <label-value label="Updated At" v-bind:value="new Date(book.updatedAt).toLocaleString()" />
     </div>
 
-    <p v-else>No book found</p>
+    <div v-else>
+      <p class="title is-4">No book found</p>
+    </div>
 
-    <a v-on:click="goToOptionsPage">Options</a>
+    <a class="button is-link is-light" v-on:click="goToOptionsPage">Options</a>
   </div>
 </template>
 
@@ -50,3 +52,8 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.popupContainer {
+  padding: 16px;
+}
+</style>

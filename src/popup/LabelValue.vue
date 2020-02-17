@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
-    <p class="title">{{ label }}</h5>
-    <p class="body-1">{{ value }}</p>
+    <p class="title is-6">{{ label }}</p>
+    <p class="subtitle is-6">{{ value }}</p>
   </div>
 </template>
 
@@ -15,7 +15,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .wrapper {
   margin-bottom: 10px;
 }

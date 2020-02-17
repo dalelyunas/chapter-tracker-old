@@ -1,7 +1,7 @@
 {
   "name": "Chapter Tracker",
   "description": "Tracks chapters as you read them",
-  "version": 1.0,
+  "version": "1.0",
   "manifest_version": 2,
   "icons": {
     "48": "icons/icon_48.png",
@@ -14,10 +14,6 @@
   "background": {
     "persistent": false,
     "page": "background.html"
-  },
-  "options_ui": {
-    "page": "options/options.html",
-    "open_in_tab": true
   },
   "permissions": [
     "storage",
