@@ -1,10 +1,10 @@
 @charset "utf-8";
 
 // Import a Google Font
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('https://fonts.googleapis.com/css?family=Lato');
 
 // Update Bulma's global variables
-$family-sans-serif: 'Nunito', sans-serif;
+$family-sans-serif: 'Lato', sans-serif;
 
 // Import only what you need from Bulma
 @import '../../node_modules/bulma/bulma.sass';
