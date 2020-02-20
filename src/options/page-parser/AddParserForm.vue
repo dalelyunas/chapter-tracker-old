@@ -1,29 +1,38 @@
 <template>
-  <b-card class="addParserCard" title="Add parser">
-    <b-form-group label="Hostname" label-for="hostnameInput">
-      <b-form-input id="hostnameInput" v-model="hostname" />
-    </b-form-group>
+  <div>
+    <div class="field">
+      <label class="label">Hostname</label>
+      <div class="control">
+        <input class="input" type="text" v-model="hostname" />
+      </div>
+    </div>
 
-    <b-form-group label="Book title parser" label-for="bookTitleInput">
-      <b-form-textarea id="bookTitleInput" v-model="bookTitleParser" rows="2" max-rows="2" />
-    </b-form-group>
+    <div class="field">
+      <label class="label">Book Title Parser</label>
+      <div class="control">
+        <textarea class="input" type="text" v-model="bookTitleParser" rows="2" />
+      </div>
+    </div>
 
-    <b-form-group label="Chapter number parser" label-for="chapterNumberInput">
-      <b-form-textarea
-        id="chapterNumberInput"
-        v-model="chapterNumberParser"
-        rows="2"
-        max-rows="2"
-      />
-    </b-form-group>
+    <div class="field">
+      <label class="label">Chapter Number Parser</label>
+      <div class="control">
+        <textarea class="input" type="text" v-model="chapterNumberParser" rows="2" />
+      </div>
+    </div>
 
-    <b-button
-      v-on:click="addParser"
-      v-bind:disabled="!isEnabled(hostname, chapterNumberParser, bookTitleParser)"
-      variant="success"
-      >Add</b-button
-    >
-  </b-card>
+    <div class="field">
+      <div class="control">
+        <button
+          class="button is-primary"
+          v-on:click="addParser"
+          v-bind:disabled="!isEnabled(hostname, chapterNumberParser, bookTitleParser)"
+        >
+          Add
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

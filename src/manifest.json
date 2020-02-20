@@ -15,6 +15,10 @@
     "persistent": false,
     "page": "background.html"
   },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
   "permissions": [
     "storage",
     "tabs",

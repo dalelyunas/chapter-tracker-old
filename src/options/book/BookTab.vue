@@ -7,7 +7,7 @@
         v-bind:key="group.hostname"
         v-bind:hostname="group.hostname"
         v-bind:books="group.books"
-        @deleteBook="handleDeleteBook"
+        @deleteBook="onDeleteBook"
       />
     </div>
   </div>
@@ -24,13 +24,13 @@ export default {
     };
   },
   created() {
-    this.refreshBookGroups();
+    this.fetchBookGroups();
   },
   methods: {
-    handleDeleteBook(book) {
+    onDeleteBook(book) {
       deleteBook(book.hostname, book.title).then(() => this.refreshBookGroups());
     },
-    refreshBookGroups() {
+    fetchBookGroups() {
       getActiveBooks().then((books) => {
         const reducer = (groups, book) => {
           if (book.hostname in groups) {

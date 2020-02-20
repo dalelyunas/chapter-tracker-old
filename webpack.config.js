@@ -6,7 +6,7 @@ const config = {
   context: `${__dirname}/src`,
   entry: {
     'popup/popup': './popup/popup.js',
-    // 'options/options': './options/options.js',
+    'options/options': './options/options.js',
     'content-script': './content-script.js',
     background: './background.js'
   },

@@ -8,7 +8,7 @@
       <h6>Chapter number parser</h6>
       <pre v-highlightjs="parser.chapterNumberParser"><code class="javascript"></code></pre>
     </div>
-    <b-button v-on:click="deleteParser" variant="danger">Delete</b-button>
+    <button v-on:click="deleteParser" variant="danger">Delete</button>
   </b-card>
 </template>
 
