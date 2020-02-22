@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1>Settings</h1>
+    <h1 class="title is-2">Settings</h1>
     <tab-card v-bind:tabs="tabs" v-bind:initialTab="initialTab" lazy>
       <template slot="tab-head-pageparsers">
         Page Parsers

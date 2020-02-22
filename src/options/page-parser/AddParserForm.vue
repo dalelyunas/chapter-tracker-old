@@ -10,14 +10,14 @@
     <div class="field">
       <label class="label">Book Title Parser</label>
       <div class="control">
-        <textarea class="input" type="text" v-model="bookTitleParser" rows="2" />
+        <textarea class="textarea" type="text" v-model="bookTitleParser" rows="2" />
       </div>
     </div>
 
     <div class="field">
       <label class="label">Chapter Number Parser</label>
       <div class="control">
-        <textarea class="input" type="text" v-model="chapterNumberParser" rows="2" />
+        <textarea class="textarea" type="text" v-model="chapterNumberParser" rows="2" />
       </div>
     </div>
 

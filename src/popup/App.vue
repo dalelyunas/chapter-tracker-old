@@ -32,7 +32,7 @@ const getBook = async () => {
 export default {
   data() {
     return {
-      book: null
+      book: undefined
     };
   },
   created() {
@@ -42,6 +42,8 @@ export default {
           ...book,
           chapters: book.chapters.map((ch) => ch.number).slice(-5)
         };
+      } else {
+        this.book = null;
       }
     });
   },

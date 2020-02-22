@@ -1,9 +1,8 @@
 <template>
-  <div class="card">
-    <div class="tabs">
-      <ul class="tab-heads">
+  <div>
+    <div class="tabs is-toggle">
+      <ul>
         <li
-          class="tab-head"
           v-for="tab in tabs"
           :key="tab"
           v-bind:class="{
@@ -11,11 +10,15 @@
           }"
           v-on:click="switchTab(tab)"
         >
-          <slot :name="tabHeadSlotName(tab)">{{ tab }} </slot>
+          <a
+            ><slot :name="tabHeadSlotName(tab)">
+              {{ tab }}
+            </slot></a
+          >
         </li>
       </ul>
     </div>
-    <div class="tab-panel"><slot :name="tabPanelSlotName"> </slot></div>
+    <div><slot :name="tabPanelSlotName"> </slot></div>
   </div>
 </template>
 

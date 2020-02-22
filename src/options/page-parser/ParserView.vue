@@ -1,15 +1,20 @@
 <template>
-  <b-card class="parserCard" v-bind:title="parser.hostname">
-    <div class="codeGroup">
-      <h6>Book title parser</h6>
-      <pre v-highlightjs="parser.bookTitleParser"><code class="javascript"></code></pre>
+  <div class="card parserCard">
+    <header class="card-header">
+      <p class="card-header-title">{{ parser.hostname }}</p>
+    </header>
+    <div class="card-content">
+      <div class="content">
+        <p class="title is-6">Book Title Parser</p>
+        <pre v-highlightjs><code class="javascript">{{parser.bookTitleParser}}</code></pre>
+        <p class="title is-6">Chapter Number Parser</p>
+        <pre v-highlightjs><code class="javascript">{{parser.chapterNumberParser}}</code></pre>
+      </div>
     </div>
-    <div class="codeGroup">
-      <h6>Chapter number parser</h6>
-      <pre v-highlightjs="parser.chapterNumberParser"><code class="javascript"></code></pre>
-    </div>
-    <button v-on:click="deleteParser" variant="danger">Delete</button>
-  </b-card>
+    <footer class="card-footer">
+      <a v-on:click="deleteParser" class="card-footer-item">Delete</a>
+    </footer>
+  </div>
 </template>
 
 <script>
@@ -27,15 +32,7 @@ export default {
 </script>
 
 <style scoped>
-p {
-  margin-bottom: 5px;
-}
-
-.codeGroup {
-  margin-bottom: 10px;
-}
-
 .parserCard {
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
 }
 </style>
