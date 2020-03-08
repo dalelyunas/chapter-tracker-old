@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="settingsContainer">
     <h1 class="title is-2">Settings</h1>
-    <tab-card v-bind:tabs="tabs" v-bind:initialTab="initialTab" lazy>
+    <tabs :tabs="tabs" :initialTab="initialTab">
       <template slot="tab-head-pageparsers">
         Page Parsers
       </template>
@@ -15,7 +15,7 @@
       <template slot="tab-panel-books">
         <book-tab />
       </template>
-    </tab-card>
+    </tabs>
   </div>
 </template>
 
@@ -30,3 +30,11 @@ export default {
   }
 };
 </script>
+<style>
+.settingsContainer {
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1rem;
+}
+</style>

@@ -2,11 +2,11 @@
   <div class="popupContainer">
     <div v-if="book !== null">
       <p class="title is-4">Last Viewed Book</p>
-      <label-value label="Hostname" v-bind:value="book.hostname" />
-      <label-value label="Title" v-bind:value="book.title" />
-      <label-value label="Current chapter" v-bind:value="book.currentChapter.number" />
-      <label-value label="Last 5 chapters" v-bind:value="book.chapters" />
-      <label-value label="Updated At" v-bind:value="new Date(book.updatedAt).toLocaleString()" />
+      <label-value label="Hostname" :value="book.hostname" />
+      <label-value label="Title" :value="book.title" />
+      <label-value label="Current chapter" :value="book.currentChapter.number" />
+      <label-value label="Last 5 chapters" :value="book.chapters" />
+      <label-value label="Updated At" :value="new Date(book.updatedAt).toLocaleString()" />
     </div>
 
     <div v-else>

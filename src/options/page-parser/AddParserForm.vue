@@ -26,7 +26,7 @@
         <button
           class="button is-primary"
           v-on:click="addParser"
-          v-bind:disabled="!isEnabled(hostname, chapterNumberParser, bookTitleParser)"
+          :disabled="!isEnabled(hostname, chapterNumberParser, bookTitleParser)"
         >
           Add
         </button>

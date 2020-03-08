@@ -1,36 +1,39 @@
 <template>
-  <b-card class="bookCard" v-bind:title="book.title">
-    <div class="dataGroup">
-      <h6>Current chapter</h6>
-      <p>{{book.currentChapter}}</p>
+  <div class="card bookCard">
+    <header class="card-header">
+      <p class="card-header-title">{{ book.title }}</p>
+    </header>
+    <div class="card-content">
+      <div class="content">
+        <p class="title is-6">Current Chapter</p>
+        <p>{{ book.currentChapter }}</p>
+        <p class="title is-6">All Chapters</p>
+        <p>{{ book.chapters }}</p>
+        <p class="title is-6">Updated At</p>
+        <p>{{ book.updatedAt }}</p>
+      </div>
     </div>
-    <div class="dataGroup">
-      <h6>All Chapters</h6>
-      <p>{{book.chapters}}</p>
-    </div>
-    <b-button v-on:click="deleteBook" variant="danger">Delete</b-button>
-  </b-card>
+    <footer class="card-footer">
+      <a v-on:click="onDeleteBook" class="card-footer-item">Delete</a>
+    </footer>
+  </div>
 </template>
 
 <script>
 export default {
-  name: "BookView",
+  name: 'BookView',
   props: {
     book: { type: Object }
   },
   methods: {
-    deleteBook() {
-      this.$emit("deleteBook", this.book);
+    onDeleteBook() {
+      this.$emit('deleteBook', this.book);
     }
   }
 };
 </script>
 
 <style scoped>
-.dataGroup {
-  margin-bottom: 10px;
-}
-
 .bookCard {
   margin-bottom: 20px;
 }

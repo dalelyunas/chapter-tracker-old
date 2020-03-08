@@ -1,14 +1,22 @@
 <template>
-  <div>
+  <div class="section leadSection">
     <h2 class="title">Books</h2>
     <div class="bookGroupContainer">
-      <book-view-group
-        v-for="group in bookGroups"
-        v-bind:key="group.hostname"
-        v-bind:hostname="group.hostname"
-        v-bind:books="group.books"
-        @deleteBook="onDeleteBook"
-      />
+      <tabs :tabs="Object.keys(bookGroups)" :initialTab="selectedBookGroup">
+        <template v-for="group in bookGroups">
+          <template :slot="`tab-head-${group.hostname}`">
+            {{ group.hostname }}
+          </template>
+          <template :slot="`tab-panel-${group.hostname}`">
+            <book-group-view
+              :key="group.hostname"
+              :hostname="group.hostname"
+              :books="group.books"
+              @deleteBook="onDeleteBook"
+            />
+          </template>
+        </template>
+      </tabs>
     </div>
   </div>
 </template>
@@ -20,7 +28,8 @@ export default {
   name: 'BookTab',
   data() {
     return {
-      bookGroups: []
+      bookGroups: {},
+      selectedHostname: undefined
     };
   },
   created() {
@@ -28,7 +37,7 @@ export default {
   },
   methods: {
     onDeleteBook(book) {
-      deleteBook(book.hostname, book.title).then(() => this.refreshBookGroups());
+      deleteBook(book.hostname, book.title).then(() => this.fetchBookGroups());
     },
     fetchBookGroups() {
       getActiveBooks().then((books) => {
@@ -44,6 +53,7 @@ export default {
           return groups;
         };
         this.bookGroups = books.reduce(reducer, {});
+        this.selectedHostname = Object.keys(this.bookGroups)[0];
       });
     }
   }
@@ -51,13 +61,7 @@ export default {
 </script>
 
 <style scoped>
-.title {
-  margin-bottom: 20px;
-}
-
-.bookContainer {
-  overflow-y: scroll;
-  max-height: 800px;
-  margin-bottom: 20px;
+.leadSection {
+  padding-top: 0;
 }
 </style>

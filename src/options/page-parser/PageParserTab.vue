@@ -34,8 +34,8 @@
       <h3 class="title">Page Parsers</h3>
       <parser-view
         v-for="parser in parsers"
-        v-bind:key="parser.hostname"
-        v-bind:parser="parser"
+        :key="parser.hostname"
+        :parser="parser"
         @deleteParser="onDeleteParser"
       />
     </div>

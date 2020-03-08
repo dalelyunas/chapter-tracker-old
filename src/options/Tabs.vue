@@ -5,7 +5,7 @@
         <li
           v-for="tab in tabs"
           :key="tab"
-          v-bind:class="{
+          :class="{
             'is-active': activeTab === tab
           }"
           v-on:click="switchTab(tab)"
