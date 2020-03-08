@@ -9,7 +9,7 @@
       <label-value label="Updated At" :value="new Date(book.updatedAt).toLocaleString()" />
     </div>
 
-    <div v-else>
+    <div v-else-if="isLoaded">
       <p class="title is-4">No book found</p>
     </div>
 
@@ -32,7 +32,8 @@ const getBook = async () => {
 export default {
   data() {
     return {
-      book: undefined
+      book: null,
+      isLoaded: false
     };
   },
   created() {
@@ -45,6 +46,7 @@ export default {
       } else {
         this.book = null;
       }
+      this.isLoaded = true;
     });
   },
   methods: {

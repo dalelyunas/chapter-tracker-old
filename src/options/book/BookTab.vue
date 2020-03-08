@@ -2,7 +2,7 @@
   <div class="section leadSection">
     <h2 class="title">Books</h2>
     <div class="bookGroupContainer">
-      <tabs :tabs="Object.keys(bookGroups)" :initialTab="selectedBookGroup">
+      <tabs :tabs="bookKeys" :initialTab="bookKeys[0]">
         <template v-for="group in bookGroups">
           <template :slot="`tab-head-${group.hostname}`">
             {{ group.hostname }}
@@ -28,12 +28,16 @@ export default {
   name: 'BookTab',
   data() {
     return {
-      bookGroups: {},
-      selectedHostname: undefined
+      bookGroups: {}
     };
   },
   created() {
     this.fetchBookGroups();
+  },
+  computed: {
+    bookKeys() {
+      return Object.keys(this.bookGroups);
+    }
   },
   methods: {
     onDeleteBook(book) {
@@ -53,7 +57,6 @@ export default {
           return groups;
         };
         this.bookGroups = books.reduce(reducer, {});
-        this.selectedHostname = Object.keys(this.bookGroups)[0];
       });
     }
   }

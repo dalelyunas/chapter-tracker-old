@@ -33,6 +33,11 @@ export default {
       activeTab: this.initialTab
     };
   },
+  watch: {
+    initialTab(val) {
+      this.activeTab = val;
+    }
+  },
   computed: {
     tabPanelSlotName() {
       return `tab-panel-${this.activeTab}`;
