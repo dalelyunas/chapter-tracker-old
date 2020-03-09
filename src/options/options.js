@@ -15,6 +15,7 @@ import PageParserTab from './page-parser/PageParserTab.vue';
 import BookTab from './book/BookTab.vue';
 import BookGroupView from './book/BookGroupView.vue';
 import BookView from './book/BookView.vue';
+import ChaptersTable from './book/ChaptersTable.vue';
 
 Vue.component('tabs', Tabs);
 
@@ -25,6 +26,7 @@ Vue.component('page-parser-tab', PageParserTab);
 Vue.component('book-tab', BookTab);
 Vue.component('book-group-view', BookGroupView);
 Vue.component('book-view', BookView);
+Vue.component('chapters-table', ChaptersTable);
 
 hljs.registerLanguage('javascript', javascript);
 

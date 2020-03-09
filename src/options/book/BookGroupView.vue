@@ -1,6 +1,17 @@
 <template>
   <div>
-    <book-view v-for="book in books" :key="book.title" :book="book" @deleteBook="onDeleteBook" />
+    <input
+      class="input searchInput"
+      type="text"
+      v-model="search"
+      placeholder="Search book titles..."
+    />
+    <book-view
+      v-for="book in filteredBooks"
+      :key="book.title"
+      :book="book"
+      @deleteBook="onDeleteBook"
+    />
   </div>
 </template>
 
@@ -11,6 +22,19 @@ export default {
     books: { type: Array },
     hostname: { type: String }
   },
+  data() {
+    return {
+      search: ''
+    };
+  },
+  computed: {
+    filteredBooks() {
+      console.log('filtering');
+      return this.books.filter((book) =>
+        book.title.toLowerCase().includes(this.search.toLowerCase())
+      );
+    }
+  },
   methods: {
     onDeleteBook(book) {
       this.$emit('deleteBook', book);
@@ -18,3 +42,8 @@ export default {
   }
 };
 </script>
+<style scoped>
+.searchInput {
+  margin-bottom: 1.5rem;
+}
+</style>

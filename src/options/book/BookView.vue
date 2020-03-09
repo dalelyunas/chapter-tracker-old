@@ -6,11 +6,11 @@
     <div class="card-content">
       <div class="content">
         <p class="title is-6">Current Chapter</p>
-        <p>{{ book.currentChapter }}</p>
+        <chapters-table :chapters="[book.currentChapter]" />
         <p class="title is-6">All Chapters</p>
-        <p>{{ book.chapters }}</p>
+        <chapters-table :chapters="book.chapters" />
         <p class="title is-6">Updated At</p>
-        <p>{{ book.updatedAt }}</p>
+        <p>{{ new Date(book.updatedAt).toLocaleString() }}</p>
       </div>
     </div>
     <footer class="card-footer">
