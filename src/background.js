@@ -11,6 +11,7 @@ import {
 } from './model/Message';
 import { performBookSync } from './book-sync';
 import { sendInvalidDataNotification, sendErrorNotification } from './api/notification-api';
+import { saveLastBooksSync } from './api/last-books-sync-api';
 
 const getHostnameUnsafe = (url) => {
   return new URL(url).hostname;
@@ -72,7 +73,7 @@ chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
     case messageTypes.BOOK_SYNC_REQUESTED:
       performBookSync()
         .then(() => {
-          sendResponse(makeBookSyncCompletedMessage());
+          saveLastBooksSync().then(() => sendResponse(makeBookSyncCompletedMessage()));
         })
         .catch(() => sendResponse(makeErrorMessage()));
       break;

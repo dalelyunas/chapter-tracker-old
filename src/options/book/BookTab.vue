@@ -1,5 +1,7 @@
 <template>
   <div class="section leadSection">
+    <h2 class="title">Sync Books</h2>
+    <books-sync-section />
     <h2 class="title">Books</h2>
     <div class="bookGroupContainer">
       <tabs :tabs="bookKeys" :initialTab="bookKeys[0]">
