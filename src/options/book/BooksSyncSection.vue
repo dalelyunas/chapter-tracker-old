@@ -1,7 +1,20 @@
 <template>
   <div class="wrapper">
-    Books last synced
-    <button v-bind:disabled="syncStatus === 'pending'" v-on:click="syncBooks">Sync Books</button>
+    <div v-if="syncStatus === 'complete'" class="notification is-success syncMessage">
+      Sync successful
+    </div>
+    <div v-if="syncStatus === 'error'" class="notification is-danger syncMessage">Sync failed</div>
+
+    <div class="lastSync">
+      <span class="subtitle">Books last synced: </span>
+      {{ lastBookSync === null ? 'Never' : new Date(lastBooksSync).toLocaleString() }}
+    </div>
+
+    <div>
+      <button class="button" v-bind:disabled="syncStatus === 'pending'" v-on:click="syncBooks">
+        Sync Books
+      </button>
+    </div>
   </div>
 </template>
 
@@ -14,7 +27,7 @@ export default {
   data() {
     return {
       syncStatus: '',
-      lastBooksSync: null
+      lastBooksSync: undefined
     };
   },
   created() {
@@ -34,6 +47,7 @@ export default {
           default:
             this.syncStatus = 'error';
         }
+        this.$emit('booksSyncComplete');
         this.fetchLastBooksSync();
       });
     },
@@ -44,8 +58,14 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .wrapper {
-  margin-bottom: 10px;
+  margin-bottom: 1.5rem;
+}
+.syncMessage {
+  max-width: 200px;
+}
+.lastSync {
+  margin-bottom: 0.5rem;
 }
 </style>

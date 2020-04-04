@@ -16,6 +16,7 @@ import BookTab from './book/BookTab.vue';
 import BookGroupView from './book/BookGroupView.vue';
 import BookView from './book/BookView.vue';
 import ChaptersTable from './book/ChaptersTable.vue';
+import BooksSyncSection from './book/BooksSyncSection.vue';
 
 Vue.component('tabs', Tabs);
 
@@ -27,6 +28,7 @@ Vue.component('book-tab', BookTab);
 Vue.component('book-group-view', BookGroupView);
 Vue.component('book-view', BookView);
 Vue.component('chapters-table', ChaptersTable);
+Vue.component('books-sync-section', BooksSyncSection);
 
 hljs.registerLanguage('javascript', javascript);
 

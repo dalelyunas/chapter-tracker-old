@@ -29,7 +29,6 @@ export default {
   },
   computed: {
     filteredBooks() {
-      console.log('filtering');
       return this.books.filter((book) =>
         book.title.toLowerCase().includes(this.search.toLowerCase())
       );

@@ -15,7 +15,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .wrapper {
   margin-bottom: 10px;
 }
