@@ -1,7 +1,7 @@
 <template>
   <div class="settingsContainer">
     <h1 class="title is-2">Settings</h1>
-    <tabs :tabs="tabs" :initialTab="initialTab">
+    <tabs :tabs="tabs" :initialTab="initialTab" tabStyle="boxed">
       <template slot="tab-head-pageparsers">
         Page Parsers
       </template>

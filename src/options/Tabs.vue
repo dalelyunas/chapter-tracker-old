@@ -1,6 +1,12 @@
 <template>
   <div>
-    <div class="tabs is-toggle">
+    <div
+      :class="{
+        tabs: true,
+        'is-toggle': tabStyle === 'toggle',
+        'is-boxed': tabStyle === 'boxed'
+      }"
+    >
       <ul>
         <li
           v-for="tab in tabs"
@@ -26,7 +32,8 @@
 export default {
   props: {
     initialTab: String,
-    tabs: Array
+    tabs: Array,
+    tabStyle: String
   },
   data() {
     return {

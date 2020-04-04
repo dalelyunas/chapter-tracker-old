@@ -7,7 +7,9 @@
 
     <div class="lastSync">
       <span class="subtitle">Books last synced: </span>
-      {{ lastBookSync === null ? 'Never' : new Date(lastBooksSync).toLocaleString() }}
+      <span v-if="!isLoading">{{
+        lastBooksSync !== null ? new Date(lastBooksSync).toLocaleString() : 'Never'
+      }}</span>
     </div>
 
     <div>
@@ -27,7 +29,8 @@ export default {
   data() {
     return {
       syncStatus: '',
-      lastBooksSync: undefined
+      isLoading: true,
+      lastBooksSync: null
     };
   },
   created() {
@@ -52,7 +55,11 @@ export default {
       });
     },
     fetchLastBooksSync() {
-      getLastBooksSync().then((lastBooksSync) => (this.lastBooksSync = lastBooksSync));
+      this.isLoading = true;
+      getLastBooksSync().then((lastBooksSync) => {
+        this.lastBooksSync = lastBooksSync;
+        this.isLoading = false;
+      });
     }
   }
 };

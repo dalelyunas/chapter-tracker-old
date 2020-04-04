@@ -3,7 +3,7 @@
     <h2 class="title">Books</h2>
     <books-sync-section @booksSyncComplete="fetchBookGroups" />
     <div class="bookGroupContainer">
-      <tabs :tabs="bookKeys" :initialTab="bookKeys[0]">
+      <tabs :tabs="bookKeys" :initialTab="bookKeys[0]" tabStyle="toggle">
         <template v-for="group in bookGroups">
           <template :slot="`tab-head-${group.hostname}`">
             {{ group.hostname }}
